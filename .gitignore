@@ -1,0 +1,51 @@
+# Godot generated file:
+.godot/
+.import/
+
+# User defined folders/files:
+.vscode/
+.idea/
+
+# Binary files:
+*.exe
+*.dll
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.apk
+*.ipa
+*.bin
+*.wav
+*.ogg
+*.mp3
+*.obj
+*.gltf
+*.glb
+*.scn.import
+*.tscn.import
+*.res.import
+*.tres.import
+*.gdc
+
+# Export templates
+*.pck
+*.zip
+
+# Editor-specific
+export_presets.cfg
+
+# C#
+.mono/
+MonoBleedingEdge/
+project_name.sln
+.vs/
+*.csproj
+*.user
+*.suo
+
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+README.md
