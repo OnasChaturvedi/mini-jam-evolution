@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bmqor5h1q23pw"]
+[gd_scene load_steps=6 format=3 uid="uid://bmqor5h1q23pw"]
 
 [ext_resource type="Script" uid="uid://b6ea25cds57ci" path="res://scripts/world.gd" id="1_0jgge"]
-[ext_resource type="Texture2D" uid="uid://bbkdynlg3qcg5" path="res://resources/Tilesetplus.png" id="2_4dvvg"]
+[ext_resource type="Texture2D" uid="uid://dmh0jwqovgr54" path="res://resources/TilesetV3.png" id="2_4dvvg"]
+[ext_resource type="PackedScene" uid="uid://c2lbuipkhgatn" path="res://scenes/bush.tscn" id="2_rnjyy"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rnjyy"]
 texture = ExtResource("2_4dvvg")
@@ -12,6 +13,9 @@ texture = ExtResource("2_4dvvg")
 1:1/0 = 0
 2:1/0 = 0
 0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+0:3/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_0jgge"]
 sources/1 = SubResource("TileSetAtlasSource_rnjyy")
@@ -20,10 +24,18 @@ sources/1 = SubResource("TileSetAtlasSource_rnjyy")
 
 [node name="World" type="Node2D" parent="." node_paths=PackedStringArray("tile_map_node")]
 script = ExtResource("1_0jgge")
-world_width = 192
-world_height = 108
+world_width = 1000
+world_height = 1000
 tile_map_node = NodePath("Terrain")
-seed = -15
+bush_scene = ExtResource("2_rnjyy")
+water_level = 0.37
+seed = 1420
 
 [node name="Terrain" type="TileMapLayer" parent="World"]
 tile_set = SubResource("TileSet_0jgge")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(1166, 771)
+zoom = Vector2(0.5, 0.5)
+
+[node name="Bush" parent="." instance=ExtResource("2_rnjyy")]
