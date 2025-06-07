@@ -19,7 +19,11 @@ extends CharacterBody2D
 @export var reproduction_threshold_thirst: float = 80.0 # Thirst level needed to consider reproducing
 @export var reproduction_threshold_hunger: float = 80.0 # Hunger level needed to consider reproducing
 var creature_scene_path: String = "res://scenes/creature.tscn"
-
+const DEATH_POINT_VALUES = {
+	"thirst": 5,
+	"hunger": 2,
+	"age": 10
+}
 @export var max_age: float = 15
 # --- Exploration State Parameters (moved here from state for editor access) ---
 @export var exploration_move_duration: float = 0.5 # How long to move in one direction during exploration
@@ -174,16 +178,23 @@ func _update_needs(delta: float):
 	# or an actual death event which would log data for "Harvest of Failure".
 	if current_thirst <= 0 and current_hunger <= 0:
 		print("Darwin (", name, ") is critically thirsty and hungry! (Would die here and log failure)")
+		var points = DEATH_POINT_VALUES.get("thirst", 1)
+		EvolutionManager.report_death("thirst", global_position, DEATH_POINT_VALUES.get("thirst", 1))
 		call_deferred("queue_free")
 		# Example: change_state("DyingState")
 	elif current_thirst <= 0:
 		print("Darwin (", name, ") is critically thirsty! (Would die here)")
+		EvolutionManager.report_death("thirst", global_position, DEATH_POINT_VALUES.get("thirst", 1))
 		call_deferred("queue_free")
 	elif current_hunger <= 0:
 		print("Darwin (", name, ") is critically hungry! (Would die here)")
+		var points = DEATH_POINT_VALUES.get("hunger", 1)
+		EvolutionManager.report_death("hunger", global_position, DEATH_POINT_VALUES.get("hunger", 1))
 		call_deferred("queue_free")
 	elif current_age >= max_age:
 		print("Darwin died of old age")
+		var points = DEATH_POINT_VALUES.get("age", 1)
+		EvolutionManager.report_death("age", global_position, DEATH_POINT_VALUES.get("age", 1))
 		call_deferred("queue_free")
 
 

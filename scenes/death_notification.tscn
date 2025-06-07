@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://dcnb1e03d5x65"]
+
+[ext_resource type="FontFile" uid="uid://coe32nc7ugkwu" path="res://resources/homespun.ttf" id="1_nsq8a"]
+[ext_resource type="Script" uid="uid://6jwdvmfxjsso" path="res://scripts/death_notification.gd" id="1_t284n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nsq8a"]
+bg_color = Color(0.244776, 0.244776, 0.244776, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[node name="DeathNotification" type="Label"]
+offset_right = 40.0
+offset_bottom = 33.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("1_nsq8a")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_nsq8a")
+script = ExtResource("1_t284n")
