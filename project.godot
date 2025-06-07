@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="EpochsofError"
-run/main_scene="uid://bmqor5h1q23pw"
+run/main_scene="uid://c4c6gs01cvtfg"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
