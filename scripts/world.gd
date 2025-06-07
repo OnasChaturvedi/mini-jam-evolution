@@ -279,10 +279,8 @@ func _apply_biomes_to_tilemap():
 			if biomes.has(biome_name):
 				tile_coords = biomes[biome_name]["tile_coords"]
 			else:
-				# If a biome doesn't have defined tile coordinates, print a warning
-				print("Warning: Biome '" + biome_name + "' at (" + str(x) + ", " + str(y) + ") has no tile_coords defined in 'biomes' dictionary. This cell will be empty.")
-
-			# If we found valid tile coordinates, set the cell on the TileMapLayer
+				pass
+				# print("Warning: Biome '" + biome_name + "' at (" + str(x) + ", " + str(y) + ") has no tile_coords defined in 'biomes' dictionary. This cell will be empty.")
 			if tile_coords != Vector2i(-1, -1):
 				tile_map_node.set_cell(Vector2i(x, y), source_id, tile_coords)
 

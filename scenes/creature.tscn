@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfva7i8vpovtj"]
+
+[ext_resource type="Script" uid="uid://co1bjbscw8uaf" path="res://scripts/creature.gd" id="1_upmfi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_u1m71"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_upmfi"]
+size = Vector2(20, 20)
+
+[node name="Creature" type="CharacterBody2D"]
+script = ExtResource("1_upmfi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_u1m71")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("PlaceholderTexture2D_upmfi")
