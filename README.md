@@ -1,10 +1,10 @@
 # mini-jam-evolution
 ## Game Loop
-- [ ] Build basic turn-based simulation with Creation → Trial → Intervention phases
+- [ ] Build basic real time based simulation with Creation → Trial → Intervention phases
 - [ ] Implement creature lifecycle (spawn, live, die) with comprehensive death tracking
 - [ ] Create Evolution Points system
-- [ ] World Foundation
-- [ ] Design grid-based world with terrain types, hazards, and resources
+- [x] World Foundation
+- [x] Design grid-based world with terrain types, hazards, and resources
 - [ ] Implement creature AI with trait-driven behavior and simple needs hierarchy
 - [ ] Build trait system that affects movement, survival, and interaction with environment
 - [ ] Design evolution point economy and upgrade categories
