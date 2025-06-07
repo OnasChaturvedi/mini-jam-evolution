@@ -8,14 +8,6 @@ func _enter():
 	_set_new_exploration_direction()
 
 func _physics_process(delta: float):
-	# Prioritization: Check for more pressing needs
-	#if darwin.current_thirst <= darwin.hydration_threshold and darwin._find_nearest_resource_source("water") != Vector2i.ZERO:
-		#change_state("SeekingWaterState")
-		#return
-	#if darwin.current_hunger <= darwin.hunger_threshold and darwin._find_nearest_resource_source("food") != Vector2i.ZERO:
-		#change_state("SeekingFoodState")
-		#return
-	
 	# Continue exploring logic
 	exploration_timer -= delta
 	if exploration_timer <= 0:
@@ -24,6 +16,9 @@ func _physics_process(delta: float):
 			return
 		if darwin.current_hunger <= darwin.hunger_threshold:
 			change_state("SeekingFoodState")
+			return
+		if darwin.current_thirst >= darwin.reproduction_threshold_thirst and darwin.current_hunger >= darwin.reproduction_threshold_hunger:
+			change_state("ReproducingState")
 			return
 		
 		_set_new_exploration_direction()

@@ -13,11 +13,18 @@ extends CharacterBody2D
 @export var satiation_rate: float = 15.0 # How much hunger is restored per second when eating
 @export var hunger_threshold: float = 60.0 # Hunger level at which Darwin starts seeking food
 
+@export var reproduction_thirst_cost: float = 30.0   # Thirst consumed during reproduction
+@export var reproduction_hunger_cost: float = 30.0   # Hunger consumed during reproduction
+@export var reproduction_time: float = 2.0           # How long reproduction takes (animation/delay)
+@export var reproduction_threshold_thirst: float = 80.0 # Thirst level needed to consider reproducing
+@export var reproduction_threshold_hunger: float = 80.0 # Hunger level needed to consider reproducing
+var creature_scene_path: String = "res://scenes/creature.tscn"
+
 @export var max_age: float = 15
 # --- Exploration State Parameters (moved here from state for editor access) ---
 @export var exploration_move_duration: float = 0.5 # How long to move in one direction during exploration
 
-@onready var terrain: TileMapLayer = %Terrain # Ensure this %Path is correct in your scene
+@onready var terrain: TileMapLayer = $"../World/Terrain" # Ensure this %Path is correct in your scene
 
 # --- State Machine Variables ---
 var current_state_object: State = null # Holds the actual instantiated state object
@@ -29,6 +36,7 @@ const SEEKING_WATER_STATE =preload("res://scripts/ai_states/seeking_water_state.
 const DRINKING_STATE = preload("res://scripts/ai_states/drinking_state.gd")
 const SEEKING_FOOD_STATE = preload("res://scripts/ai_states/seeking_food_state.gd")
 const EATING_STATE = preload("res://scripts/ai_states/eating_state.gd")
+const REPRODUCING_STATE = preload("res://scripts/ai_states/reproducing_state.gd")
 # Add more state preload constants here as you create them!
 
 # --- Darwin Attributes (Current Values) ---
@@ -86,6 +94,7 @@ func change_state(new_state_name: String):
 		"DrinkingState": new_state_script = DRINKING_STATE
 		"SeekingFoodState": new_state_script = SEEKING_FOOD_STATE
 		"EatingState": new_state_script = EATING_STATE
+		"ReproducingState": new_state_script = REPRODUCING_STATE
 		# Add more cases here for any new states you create
 		_:
 			print("Error: State '%s' not found or not preloaded!" % new_state_name)
@@ -178,6 +187,37 @@ func _update_needs(delta: float):
 		call_deferred("queue_free")
 
 
+func _spawn_new_creature():
+	if creature_scene_path.is_empty():
+		print("Reproduction failed: Darwin scene path is empty!")
+		return
+
+	var creature_scene: PackedScene = load(creature_scene_path)
+	if not creature_scene:
+		print("Reproduction failed: Could not load Darwin scene from path: ", creature_scene_path)
+		return
+
+	# Consume resources for reproduction
+	current_thirst = max(0, current_thirst - reproduction_thirst_cost)
+	current_hunger = max(0, current_hunger - reproduction_hunger_cost)
+
+	var new_darwin_instance = creature_scene.instantiate()
+	
+	# Add the new Darwin to the same parent as the current Darwin
+	# This assumes your Darwins are children of a common Node (e.g., a "Darwins" Node2D)
+	add_sibling(new_darwin_instance)
+
+	# Place the new Darwin nearby, with a small random offset
+	var spawn_offset = Vector2(randf_range(-50, 50), randf_range(-50, 50))
+	new_darwin_instance.global_position = global_position + spawn_offset
+	
+	# Initialize offspring's needs (e.g., partially full)
+	new_darwin_instance.current_thirst = new_darwin_instance.max_thirst * 0.5
+	new_darwin_instance.current_hunger = new_darwin_instance.max_hunger * 0.5
+	
+	print("Darwin (", name, ") reproduced! New Darwin spawned at ", new_darwin_instance.global_position)
+	
+	
 # --- Debug Drawing (for visualization during development) ---
 func _draw():
 	# Skip drawing in the editor and if essential nodes are missing
