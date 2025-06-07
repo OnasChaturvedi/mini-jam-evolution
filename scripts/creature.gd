@@ -13,6 +13,7 @@ extends CharacterBody2D
 @export var satiation_rate: float = 15.0 # How much hunger is restored per second when eating
 @export var hunger_threshold: float = 60.0 # Hunger level at which Darwin starts seeking food
 
+@export var max_age: float = 15
 # --- Exploration State Parameters (moved here from state for editor access) ---
 @export var exploration_move_duration: float = 0.5 # How long to move in one direction during exploration
 
@@ -34,6 +35,7 @@ const EATING_STATE = preload("res://scripts/ai_states/eating_state.gd")
 # These are accessed by the state objects via the 'darwin' reference
 var current_thirst: float = 0.0
 var current_hunger: float = 0.0
+var current_age: float = 0.0
 var target_tile_coords: Vector2i = Vector2i.ZERO # Stores the coordinates of the tile the Darwin is moving towards
 
 
@@ -46,6 +48,7 @@ func _ready() -> void:
 	# Initialize needs (e.g., start hungry/thirsty to immediately see behavior)
 	current_thirst = max_thirst * max(0.2, randf())
 	current_hunger = max_hunger * max(0.2, randf())
+	max_age *= randf_range(0.5, 1.5)
 	
 	# Set the initial state
 	change_state("ExplorationState")
@@ -109,20 +112,42 @@ func _find_nearest_resource_source(resource_type: String) -> Vector2i:
 	var resource_coords: Vector2i = Vector2i.ZERO
 	var min_distance_sq: float = INF
 
-	var search_radius: int = 5 # How far to search for resources
+	var tile_search_radius: int = 5 # How far to search for resources
 	
-	for y_offset in range(-search_radius, search_radius + 1):
-		for x_offset in range(-search_radius, search_radius + 1):
-			var check_coords: Vector2i = current_tile_coords + Vector2i(x_offset, y_offset)
-			
-			var tile_data: TileData = terrain.get_cell_tile_data(check_coords)
-			if tile_data:
-				var terrain_type: String = tile_data.get_custom_data("terrain_type")
-				if terrain_type == resource_type:
-					var dist_sq = current_tile_coords.distance_squared_to(check_coords)
-					if dist_sq < min_distance_sq:
-						min_distance_sq = dist_sq
-						resource_coords = check_coords
+	if resource_type == "food": # Only search for Area2D food sources when seeking "food"
+		var search_radius_world: float = terrain.tile_set.tile_size.x * tile_search_radius # Convert tile radius to world units
+		
+		# Get all nodes in the "food_source" group
+		var food_bushes = get_tree().get_nodes_in_group("food_source")
+		var chosen_bush: BerryBush
+		
+		for bush in food_bushes:
+			if bush is BerryBush:
+				if !bush.has_berries():
+					continue
+					
+				var bush_world_pos = bush.global_position
+				var dist_sq = global_position.distance_squared_to(bush_world_pos)
+				
+				if dist_sq < min_distance_sq and dist_sq < search_radius_world * search_radius_world:
+					min_distance_sq = dist_sq
+					resource_coords = terrain.local_to_map(bush_world_pos)
+					chosen_bush = bush
+		if chosen_bush:
+			chosen_bush.feed()
+	else:
+		for y_offset in range(-tile_search_radius, tile_search_radius + 1):
+			for x_offset in range(-tile_search_radius, tile_search_radius + 1):
+				var check_coords: Vector2i = current_tile_coords + Vector2i(x_offset, y_offset)
+				
+				var tile_data: TileData = terrain.get_cell_tile_data(check_coords)
+				if tile_data:
+					var terrain_type: String = tile_data.get_custom_data("terrain_type")
+					if terrain_type == resource_type:
+						var dist_sq = current_tile_coords.distance_squared_to(check_coords)
+						if dist_sq < min_distance_sq:
+							min_distance_sq = dist_sq
+							resource_coords = check_coords
 	
 	return resource_coords
 
@@ -132,17 +157,25 @@ func _update_needs(delta: float):
 	current_thirst = max(0, current_thirst - thirst_depletion_rate * delta)
 	# Hunger depletion
 	current_hunger = max(0, current_hunger - hunger_depletion_rate * delta)
+	# Aging
+	current_age = min(max_age, current_age + delta)
 	
 	# --- Implement Death Conditions Here ---
 	# For now, just print warnings. In your actual game, you'd trigger a "DyingState"
 	# or an actual death event which would log data for "Harvest of Failure".
 	if current_thirst <= 0 and current_hunger <= 0:
 		print("Darwin (", name, ") is critically thirsty and hungry! (Would die here and log failure)")
+		call_deferred("queue_free")
 		# Example: change_state("DyingState")
 	elif current_thirst <= 0:
 		print("Darwin (", name, ") is critically thirsty! (Would die here)")
+		call_deferred("queue_free")
 	elif current_hunger <= 0:
 		print("Darwin (", name, ") is critically hungry! (Would die here)")
+		call_deferred("queue_free")
+	elif current_age >= max_age:
+		print("Darwin died of old age")
+		call_deferred("queue_free")
 
 
 # --- Debug Drawing (for visualization during development) ---
@@ -155,12 +188,14 @@ func _draw():
 	
 	# Draw Thirst Bar (Blue)
 	var thirst_fill_width = bar_width * (current_thirst / max_thirst)
+	@warning_ignore("integer_division")
 	var thirst_bar_pos = Vector2(-bar_width / 2, -30) # Position above Darwin
 	draw_rect(Rect2(thirst_bar_pos, Vector2(bar_width, bar_height)), Color.GRAY, false) # Background
 	draw_rect(Rect2(thirst_bar_pos, Vector2(thirst_fill_width, bar_height)), Color.BLUE) # Fill
 
 	# Draw Hunger Bar (Green)
 	var hunger_fill_width = bar_width * (current_hunger / max_hunger)
+	@warning_ignore("integer_division")
 	var hunger_bar_pos = Vector2(-bar_width / 2, -20) # Slightly below thirst bar
 	draw_rect(Rect2(hunger_bar_pos, Vector2(bar_width, bar_height)), Color.GRAY, false) # Background
 	draw_rect(Rect2(hunger_bar_pos, Vector2(hunger_fill_width, bar_height)), Color.GREEN) # Fill
@@ -169,6 +204,7 @@ func _draw():
 	# IMPORTANT: You need a default font set in Project Settings > Gui > Theme > Default Font
 	# OR load one in _ready() and assign it.
 	var state_display_name = current_state_name.replace("State", "").replace("_", " ").capitalize()
+	@warning_ignore("integer_division")
 	draw_string(ThemeDB.fallback_font, Vector2(-bar_width / 2, -45), state_display_name,0, -1, 16, Color.WHITE)
 	
 	# Optional: Draw a line to the target tile when seeking resources (visual aid)

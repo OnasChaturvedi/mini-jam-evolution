@@ -8,6 +8,7 @@
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tbgi4"]
 texture = ExtResource("3_jyhfs")
 0:0/0 = 0
+0:0/0/custom_data_0 = "water"
 1:0/0 = 0
 2:0/0 = 0
 0:1/0 = 0
@@ -34,7 +35,7 @@ world_width = 100
 world_height = 100
 tile_map_node = NodePath("Terrain")
 bush_scene = ExtResource("2_jyhfs")
-seed = 53
+seed = 1435
 
 [node name="Terrain" type="TileMapLayer" parent="World"]
 unique_name_in_owner = true
@@ -46,57 +47,66 @@ zoom = Vector2(1, 0.964)
 
 [node name="Creature" parent="." instance=ExtResource("3_sugp2")]
 position = Vector2(753, 429)
+speed = 150.0
 thirst_depletion_rate = 3.0
-hunger_depletion_rate = 0.0
-hunger_threshold = 0.0
+hunger_depletion_rate = 5.0
+satiation_rate = 20.0
 
 [node name="Creature2" parent="." instance=ExtResource("3_sugp2")]
 position = Vector2(559, 336)
+speed = 150.0
 thirst_depletion_rate = 3.0
-hunger_depletion_rate = 0.0
-hunger_threshold = 0.0
+hunger_depletion_rate = 5.0
+satiation_rate = 20.0
 
 [node name="Creature3" parent="." instance=ExtResource("3_sugp2")]
 position = Vector2(856, 261)
+speed = 150.0
 thirst_depletion_rate = 3.0
-hunger_depletion_rate = 0.0
-hunger_threshold = 0.0
+hunger_depletion_rate = 5.0
+satiation_rate = 20.0
 
 [node name="Creature4" parent="." instance=ExtResource("3_sugp2")]
 position = Vector2(541, 519)
+speed = 150.0
 thirst_depletion_rate = 3.0
-hunger_depletion_rate = 0.0
-hunger_threshold = 0.0
+hunger_depletion_rate = 5.0
+satiation_rate = 20.0
 
 [node name="Creature5" parent="." instance=ExtResource("3_sugp2")]
 position = Vector2(438, 385)
+speed = 150.0
 thirst_depletion_rate = 3.0
-hunger_depletion_rate = 0.0
-hunger_threshold = 0.0
+hunger_depletion_rate = 5.0
+satiation_rate = 20.0
 
 [node name="Creature6" parent="." instance=ExtResource("3_sugp2")]
 position = Vector2(226, 166)
+speed = 150.0
 thirst_depletion_rate = 3.0
-hunger_depletion_rate = 0.0
-hunger_threshold = 0.0
+hunger_depletion_rate = 5.0
+satiation_rate = 20.0
 
 [node name="Creature7" parent="." instance=ExtResource("3_sugp2")]
 position = Vector2(124, 439)
+speed = 150.0
 thirst_depletion_rate = 3.0
-hunger_depletion_rate = 0.0
-hunger_threshold = 0.0
+hunger_depletion_rate = 5.0
+satiation_rate = 20.0
 
 [node name="Creature8" parent="." instance=ExtResource("3_sugp2")]
 position = Vector2(383, 39)
+speed = 150.0
 thirst_depletion_rate = 3.0
-hunger_depletion_rate = 0.0
-hunger_threshold = 0.0
+hunger_depletion_rate = 5.0
+satiation_rate = 20.0
 
 [node name="Creature9" parent="." instance=ExtResource("3_sugp2")]
 position = Vector2(955, 108)
+speed = 150.0
 thirst_depletion_rate = 3.0
-hunger_depletion_rate = 0.0
-hunger_threshold = 0.0
+hunger_depletion_rate = 5.0
+satiation_rate = 20.0
 
 [node name="WorldBorder" type="StaticBody2D" parent="."]
 
@@ -118,5 +128,3 @@ shape = SubResource("WorldBoundaryShape2D_sugp2")
 position = Vector2(1151, 336)
 rotation = -1.5708
 shape = SubResource("WorldBoundaryShape2D_sugp2")
-
-[node name="Bush" parent="." instance=ExtResource("2_jyhfs")]
