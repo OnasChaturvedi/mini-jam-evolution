@@ -4,7 +4,7 @@ func _enter():
 	# print("Entering SeekingWaterState for Darwin: ", darwin.name) # Debug print
 	darwin.target_tile_coords = darwin._find_nearest_resource_source("water")
 	if darwin.target_tile_coords == Vector2i.ZERO:
-		print("Darwin (", darwin.name, ") needs water but found no sources! Reverting to exploration.")
+		#print("Darwin (", darwin.name, ") needs water but found no sources! Reverting to exploration.")
 		change_state("ExplorationState") # Fallback if no water found
 		return
 
