@@ -1,30 +1,27 @@
-[gd_scene load_steps=7 format=3 uid="uid://c4c6gs01cvtfg"]
+[gd_scene load_steps=8 format=3 uid="uid://c4c6gs01cvtfg"]
 
 [ext_resource type="Script" uid="uid://b6ea25cds57ci" path="res://scripts/world.gd" id="1_0wfyh"]
-[ext_resource type="Texture2D" uid="uid://bbkdynlg3qcg5" path="res://resources/Tilesetplus.png" id="2_sugp2"]
+[ext_resource type="PackedScene" uid="uid://c2lbuipkhgatn" path="res://scenes/bush.tscn" id="2_jyhfs"]
+[ext_resource type="Texture2D" uid="uid://dmh0jwqovgr54" path="res://resources/TilesetV3.png" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://cfva7i8vpovtj" path="res://scenes/creature.tscn" id="3_sugp2"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rnjyy"]
-texture = ExtResource("2_sugp2")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tbgi4"]
+texture = ExtResource("3_jyhfs")
 0:0/0 = 0
-0:0/0/custom_data_0 = "water"
 1:0/0 = 0
-1:0/0/custom_data_0 = "snow"
 2:0/0 = 0
-2:0/0/custom_data_0 = "dark_grass"
 0:1/0 = 0
-0:1/0/custom_data_0 = "light_grass"
 1:1/0 = 0
-1:1/0/custom_data_0 = "food"
 2:1/0 = 0
-2:1/0/custom_data_0 = "sand"
 0:2/0 = 0
-0:2/0/custom_data_0 = "forest"
+1:2/0 = 0
+2:2/0 = 0
+0:3/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_0jgge"]
 custom_data_layer_0/name = "terrain_type"
 custom_data_layer_0/type = 4
-sources/1 = SubResource("TileSetAtlasSource_rnjyy")
+sources/1 = SubResource("TileSetAtlasSource_tbgi4")
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_sugp2"]
 distance = 1.0
@@ -36,6 +33,7 @@ script = ExtResource("1_0wfyh")
 world_width = 100
 world_height = 100
 tile_map_node = NodePath("Terrain")
+bush_scene = ExtResource("2_jyhfs")
 seed = 53
 
 [node name="Terrain" type="TileMapLayer" parent="World"]
@@ -120,3 +118,5 @@ shape = SubResource("WorldBoundaryShape2D_sugp2")
 position = Vector2(1151, 336)
 rotation = -1.5708
 shape = SubResource("WorldBoundaryShape2D_sugp2")
+
+[node name="Bush" parent="." instance=ExtResource("2_jyhfs")]
