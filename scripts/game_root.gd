@@ -70,7 +70,7 @@ func spawn_creature_in_camera_viewport():
 	
 	new_creature_instance.global_position = spawn_position
 	creature_container.add_child(new_creature_instance)
-	print("Spawned creature at: ", spawn_position)
+	#print("Spawned creature at: ", spawn_position)
 func _unhandled_input(event: InputEvent):
 	# Check if the "ui_cancel" action (Escape key) was just pressed.
 	if Input.is_action_just_pressed("ui_cancel"):

@@ -8,5 +8,4 @@ perk_id = "fast_reproduction"
 perk_name = "Rabbit Disciple"
 costs_per_level = Array[int]([15, 25, 35])
 descriptions_per_level = Array[String](["Darwinians reproduce 10% faster", "Darwinians reproduce 20% faster", "Darwinians reproduce 30% faster"])
-bonuses_per_level = Array[float]([10.0, 20.0, 30.0])
-metadata/_custom_type_script = "uid://bid2nobr3k8hu"
+bonuses_per_level = Array[float]([0.9, 0.8, 0.7])

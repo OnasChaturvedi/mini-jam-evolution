@@ -5,8 +5,9 @@ var exploration_direction: Vector2 = Vector2.ZERO
 @export var angle_offset_range: float = PI / 6 
 
 func _enter():
-	exploration_timer = darwin.exploration_move_duration
-	_set_new_exploration_step_direction()
+	if exploration_direction == Vector2.ZERO:
+		exploration_timer = darwin.exploration_move_duration
+		_set_new_exploration_step_direction()
 
 func _physics_process(delta: float):
 	exploration_timer -= delta
@@ -32,7 +33,7 @@ func _physics_process(delta: float):
 		_set_new_exploration_step_direction()
 		
 	if darwin.global_position.distance_to(darwin.current_global_exploration_goal) < 40: # Threshold in pixels
-		print("Reached global exploration goal")
+		#print("Reached global exploration goal")
 		_set_new_global_exploration_goal()
 		
 	darwin.velocity = exploration_direction * darwin.speed
@@ -59,7 +60,7 @@ func _set_new_global_exploration_goal():
 		var random_x = randf_range(viewport_top_left_global.x, viewport_bottom_right_global.x)
 		var random_y = randf_range(viewport_top_left_global.y, viewport_bottom_right_global.y)
 		darwin.current_global_exploration_goal = Vector2(random_x, random_y)
-		print("Darwin (", darwin.name, ") set new global exploration goal: ", darwin.current_global_exploration_goal)
+		#print("Darwin (", darwin.name, ") set new global exploration goal: ", darwin.current_global_exploration_goal)
 	else:
 		print("Warning: Camera2D not found for exploration. Falling back to simple random direction.")
 		_set_new_exploration_step_direction() 

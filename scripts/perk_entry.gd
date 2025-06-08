@@ -29,8 +29,11 @@ func display_perk_info(resource: Perk):
 
 	# --- Start of Leveling Display Logic ---
 	var full_perk_name = perk_data.perk_name
-	if current_level > 0:
-		full_perk_name += EvolutionManager.get_roman_numeral(current_level)
+	if current_level >= 0:
+		if current_level == 0:
+			full_perk_name += EvolutionManager.get_roman_numeral(1)
+		else:
+			full_perk_name += EvolutionManager.get_roman_numeral(current_level)
 	
 	name_label.text = full_perk_name    
 	if current_level >= perk_data.get_max_level():

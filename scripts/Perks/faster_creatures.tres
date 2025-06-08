@@ -8,5 +8,4 @@ perk_id = "faster_creatures"
 perk_name = "Increased Metabolism"
 costs_per_level = Array[int]([10, 15, 20, 25, 30])
 descriptions_per_level = Array[String](["Creatures are 10% faster", "Creatures are 15% faster", "Creatures are 20% faster", "Creatures are 25% faster", "Creatures are 35% faster"])
-bonuses_per_level = Array[float]([10.0, 15.0, 20.0, 25.0, 35.0])
-metadata/_custom_type_script = "uid://bid2nobr3k8hu"
+bonuses_per_level = Array[float]([1.1, 1.15, 1.2, 1.25, 1.35])
