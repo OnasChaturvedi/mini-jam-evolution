@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Perk" load_steps=2 format=3 uid="uid://bdx6cpegrsptq"]
+
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="1_1n4hp"]
+
+[resource]
+script = ExtResource("1_1n4hp")
+perk_id = "fast_reproduction"
+perk_name = "Rabbit Disciple"
+costs_per_level = Array[int]([15, 25, 35])
+descriptions_per_level = Array[String](["Darwinians reproduce 10% faster", "Darwinians reproduce 20% faster", "Darwinians reproduce 30% faster"])
+bonuses_per_level = Array[float]([10.0, 20.0, 30.0])
+metadata/_custom_type_script = "uid://bid2nobr3k8hu"

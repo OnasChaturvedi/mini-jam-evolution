@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Perk" load_steps=2 format=3 uid="uid://b5df5t3mtnb1e"]
+
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="1_q2esa"]
+
+[resource]
+script = ExtResource("1_q2esa")
+perk_id = "slower_hunger"
+perk_name = "Efficient Digestion"
+costs_per_level = Array[int]([10, 15, 20, 25])
+descriptions_per_level = Array[String](["Darwinians feel hungry 10% slower", "Darwinians feel hungry 15% slower", "Darwinians feel hungry 20% slower", "Darwinians feel hungry 25% slower"])
+bonuses_per_level = Array[float]([10.0, 15.0, 20.0, 25.0])
+metadata/_custom_type_script = "uid://bid2nobr3k8hu"
