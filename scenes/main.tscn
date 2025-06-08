@@ -47,11 +47,10 @@ script = ExtResource("1_tefeu")
 
 [node name="World" type="Node2D" parent="." node_paths=PackedStringArray("tile_map_node")]
 script = ExtResource("1_0wfyh")
-world_width = 100
-world_height = 100
+world_width = 72
+world_height = 42
 tile_map_node = NodePath("Terrain")
 bush_scene = ExtResource("2_jyhfs")
-seed = 1435
 
 [node name="Terrain" type="TileMapLayer" parent="World"]
 tile_set = SubResource("TileSet_0jgge")
