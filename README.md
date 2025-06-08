@@ -5,9 +5,9 @@
 - [x] Create Evolution Points system
 - [x] World Foundation
 - [x] Design grid-based world with terrain types, hazards, and resources
-- [ ] Implement creature AI with trait-driven behavior and simple needs hierarchy
-- [ ] Build trait system that affects movement, survival, and interaction with environment
-- [ ] Design evolution point economy and upgrade categories
+- [x] Implement creature AI with trait-driven behavior and simple needs hierarchy
+- [x] Build trait system that affects movement, survival, and interaction with environment
+- [x] Design evolution point economy and upgrade categories
 ## User Interface and Visualization
 - [x] Create main game view with creature and terrain visualization
 - [x] Build evolution choice interface
