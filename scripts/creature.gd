@@ -56,6 +56,13 @@ func _ready() -> void:
 		print("Tilemap 'Terrain' not found for Darwin: ", name, ". Please ensure it's correctly linked in the editor.")
 		set_physics_process(false) # Disable processing if essential nodes are missing
 		return
+		
+	var perk_dict: Dictionary = EvolutionManager.unlocked_perks
+	if perk_dict != {}:
+		speed *= perk_dict["faster_creatures"].bonus
+		reproduction_time *= perk_dict["fast_reproduction"].bonus
+		hunger_depletion_rate *= perk_dict["slower_hunger"].bonus
+		thirst_depletion_rate *= perk_dict["slower_thirst"].bonus
 	
 	current_thirst = max_thirst * max(0.4, randf())
 	current_hunger = max_hunger * max(0.4, randf())
@@ -173,20 +180,20 @@ func _update_stats(delta: float):
 	current_age = min(max_age, current_age + delta)
 	
 	if current_thirst <= 0 and current_hunger <= 0:
-		print("Darwin (", name, ") is critically thirsty and hungry! (Would die here and log failure)")
+		#print("Darwin (", name, ") is critically thirsty and hungry! (Would die here and log failure)")
 		EvolutionManager.report_death("thirst", global_position, DEATH_POINT_VALUES.get("thirst", 1))
 		call_deferred("queue_free")
 	elif current_thirst <= 0:
-		print("Darwin (", name, ") is critically thirsty! (Would die here)")
+		#print("Darwin (", name, ") is critically thirsty! (Would die here)")
 		EvolutionManager.report_death("thirst", global_position, DEATH_POINT_VALUES.get("thirst", 1))
 		call_deferred("queue_free")
 	elif current_hunger <= 0:
-		print("Darwin (", name, ") is critically hungry! (Would die here)")
+		#print("Darwin (", name, ") is critically hungry! (Would die here)")
 		var points = DEATH_POINT_VALUES.get("hunger", 1)
 		EvolutionManager.report_death("hunger", global_position, DEATH_POINT_VALUES.get("hunger", 1))
 		call_deferred("queue_free")
 	elif current_age >= max_age:
-		print("Darwin died of old age")
+		#print("Darwin died of old age")
 		var points = DEATH_POINT_VALUES.get("age", 1)
 		EvolutionManager.report_death("age", global_position, DEATH_POINT_VALUES.get("age", 1))
 		call_deferred("queue_free")
@@ -214,7 +221,7 @@ func _spawn_new_creature():
 	var spawn_offset = Vector2(randf_range(-50, 50), randf_range(-50, 50))
 	new_darwin_instance.global_position = global_position + spawn_offset
 	
-	print("Darwin (", name, ") reproduced! New Darwin spawned at ", new_darwin_instance.global_position)
+	#print("Darwin (", name, ") reproduced! New Darwin spawned at ", new_darwin_instance.global_position)
 	
 	
 # --- Debug Drawing (for visualization) ---

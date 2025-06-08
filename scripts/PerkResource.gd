@@ -1,4 +1,3 @@
-# PerkResource.gd
 extends Resource
 class_name Perk
 
