@@ -5,8 +5,8 @@
 extends Node2D
 
 # --- World Generation Parameters ---
-@export var world_width: int = 128    # Width of the generated world in tiles
-@export var world_height: int = 128   # Height of the generated world in tiles
+@export var world_width: int = 72    # Width of the generated world in tiles
+@export var world_height: int = 42   # Height of the generated world in tiles
 @export var tile_size: int = 16       # Size of each tile in pixels (e.g., 16x16, 32x32)
 									 # THIS MUST MATCH YOUR TILESET'S TILE SIZE!
 

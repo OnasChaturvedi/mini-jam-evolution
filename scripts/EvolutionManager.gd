@@ -1,4 +1,3 @@
-# EvolutionManager.gd
 extends Node
 signal perk_unlocked(perk_id)
 var evolution_points: int = 0

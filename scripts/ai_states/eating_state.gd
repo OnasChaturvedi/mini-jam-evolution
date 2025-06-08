@@ -1,7 +1,6 @@
 class_name EatingState extends State
 
 func _enter():
-	# print("Entering EatingState for Darwin: ", darwin.name) # Debug print
 	darwin.velocity = Vector2.ZERO # Stop moving to eat
 	darwin.target_tile_coords = Vector2i.ZERO # Clear the target coordinates
 
