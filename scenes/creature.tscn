@@ -48,7 +48,8 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Creature" type="CharacterBody2D"]
+[node name="Creature" type="CharacterBody2D" groups=["creatures"]]
+collision_mask = 2
 script = ExtResource("1_upmfi")
 speed = 150.0
 thirst_depletion_rate = 3.0

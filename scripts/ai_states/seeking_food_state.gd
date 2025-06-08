@@ -1,11 +1,9 @@
 class_name SeekingFoodState extends State
 
 func _enter():
-	# print("Entering SeekingFoodState for Darwin: ", darwin.name) # Debug print
-	darwin.target_tile_coords = darwin._find_nearest_resource_source("food") # Assuming "food" is a custom data value
+	darwin.target_tile_coords = darwin._find_nearest_resource_source("food") 
 	if darwin.target_tile_coords == Vector2i.ZERO:
-		#print("Darwin (", darwin.name, ") needs food but found no sources! Reverting to exploration.")
-		change_state("ExplorationState") # Fallback if no food found
+		change_state("ExplorationState") 
 		return
 
 func _physics_process(delta: float):

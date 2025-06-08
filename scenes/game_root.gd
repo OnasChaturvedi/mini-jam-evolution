@@ -2,9 +2,19 @@
 extends Node2D
 
 const DeathNotification = preload("res://scenes/death_notification.tscn")
+
+@onready var camera: Camera2D = $Camera2D
+@onready var creature_container: Node2D = $CreatureContainer
+@onready var reload_delay_timer: Timer = $ReloadDelayTimer
+
+@export var initial_creature_count: int = 10
+@export var creature_scene: PackedScene 	
+
 func _ready():
+	spawn_initial_creatures()
 	# Connect to the death signal from the global manager.
 	EvolutionManager.creature_died.connect(on_creature_died)
+	reload_delay_timer.timeout.connect(reload_game_scene)
 
 func on_creature_died(cause: String, position: Vector2):
 	# Create a new instance of the notification.
@@ -27,3 +37,36 @@ func on_creature_died(cause: String, position: Vector2):
 	
 	# Trigger the animation. The script inside the notification handles the rest.
 	notification_instance.show_message(death_message)
+	
+	if get_tree().get_nodes_in_group("creatures").size() <= 1:
+		reload_delay_timer.start()
+
+
+func reload_game_scene() -> void:
+	get_tree().reload_current_scene()
+	
+
+func spawn_initial_creatures():
+	for i in range(initial_creature_count):
+		spawn_creature_in_camera_viewport()
+
+
+func spawn_creature_in_camera_viewport():
+	if creature_scene == null or camera == null or creature_container == null:
+		return
+
+	var viewport_rect: Rect2 = camera.get_viewport_rect()
+
+	var viewport_top_left_global = camera.global_position - viewport_rect.size / 2.0
+	var viewport_bottom_right_global = camera.global_position + viewport_rect.size / 2.0
+
+	var random_x = randf_range(viewport_top_left_global.x, viewport_bottom_right_global.x)
+	var random_y = randf_range(viewport_top_left_global.y, viewport_bottom_right_global.y)
+	
+	var spawn_position = Vector2(random_x, random_y)
+
+	var new_creature_instance = creature_scene.instantiate()
+	
+	new_creature_instance.global_position = spawn_position
+	creature_container.add_child(new_creature_instance)
+	print("Spawned creature at: ", spawn_position)

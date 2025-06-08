@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var speed: float = 100.0 # Adjusted speed for better observation of AI
+@export var speed: float = 100.0
 
 # --- Core Needs ---
 @export var max_thirst: float = 100.0
@@ -19,35 +19,36 @@ extends CharacterBody2D
 @export var reproduction_threshold_thirst: float = 80.0 # Thirst level needed to consider reproducing
 @export var reproduction_threshold_hunger: float = 80.0 # Hunger level needed to consider reproducing
 var creature_scene_path: String = "res://scenes/creature.tscn"
-const DEATH_POINT_VALUES = {
-	"thirst": 5,
-	"hunger": 2,
-	"age": 10
-}
+
 @export var max_age: float = 15
-# --- Exploration State Parameters (moved here from state for editor access) ---
+
 @export var exploration_move_duration: float = 0.5 # How long to move in one direction during exploration
+var current_global_exploration_goal: Vector2 = Vector2.ZERO 
 
-@onready var terrain: TileMapLayer = $"../World/Terrain" # Ensure this %Path is correct in your scene
+@onready var terrain: TileMapLayer = $"../../World/Terrain"
 
-# --- State Machine Variables ---
 var current_state_object: State = null # Holds the actual instantiated state object
-var current_state_name: String = "" # Stores the string name of the current state (for debugging)
+var current_state_name: String = "" # Stores the string name of the current state
 
-# Preload all state scripts for efficiency. Adjust paths if your folder structure is different!
 const EXPLORATION_STATE = preload("res://scripts/ai_states/exploration_state.gd")
 const SEEKING_WATER_STATE =preload("res://scripts/ai_states/seeking_water_state.gd")
 const DRINKING_STATE = preload("res://scripts/ai_states/drinking_state.gd")
 const SEEKING_FOOD_STATE = preload("res://scripts/ai_states/seeking_food_state.gd")
 const EATING_STATE = preload("res://scripts/ai_states/eating_state.gd")
 const REPRODUCING_STATE = preload("res://scripts/ai_states/reproducing_state.gd")
-# Add more state preload constants here as you create them!
+
+const DEATH_POINT_VALUES = {
+	"thirst": 5,
+	"hunger": 2,
+	"age": 10
+}
 
 # --- Darwin Attributes (Current Values) ---
 # These are accessed by the state objects via the 'darwin' reference
 var current_thirst: float = 0.0
 var current_hunger: float = 0.0
 var current_age: float = 0.0
+var current_tiledata: TileData
 var target_tile_coords: Vector2i = Vector2i.ZERO # Stores the coordinates of the tile the Darwin is moving towards
 
 
@@ -57,40 +58,36 @@ func _ready() -> void:
 		set_physics_process(false) # Disable processing if essential nodes are missing
 		return
 	
-	# Initialize needs (e.g., start hungry/thirsty to immediately see behavior)
-	current_thirst = max_thirst * max(0.2, randf())
-	current_hunger = max_hunger * max(0.2, randf())
+	current_thirst = max_thirst * max(0.4, randf())
+	current_hunger = max_hunger * max(0.4, randf())
 	max_age *= randf_range(0.5, 1.5)
 	
-	# Set the initial state
+	current_global_exploration_goal = global_position
 	change_state("ExplorationState")
 
 
 func _physics_process(delta: float) -> void:
-	# Always update needs regardless of the current state
-	_update_needs(delta)
+	get_current_tiledata()
+	_update_stats(delta)
 	
-	# Delegate the _process logic to the current state object
 	if current_state_object != null:
 		current_state_object._physics_process(delta)
 	
-	# Apply the velocity calculated by the current state
+	apply_tile_attributes()
+	
 	move_and_slide()
 	
-	# Request a redraw for the debug visualization (thirst/hunger bars, state name)
 	queue_redraw()
 
 
 # This is the central function for changing states
 func change_state(new_state_name: String):
 	if current_state_name == new_state_name:
-		return # Already in this state, no need to change
+		return
 	
-	# First, call the _exit() method of the current state (if one exists)
 	if current_state_object != null:
 		current_state_object._exit()
 	
-	# Determine which script to load based on the new_state_name
 	var new_state_script = null
 	match new_state_name:
 		"ExplorationState": new_state_script = EXPLORATION_STATE
@@ -99,24 +96,27 @@ func change_state(new_state_name: String):
 		"SeekingFoodState": new_state_script = SEEKING_FOOD_STATE
 		"EatingState": new_state_script = EATING_STATE
 		"ReproducingState": new_state_script = REPRODUCING_STATE
-		# Add more cases here for any new states you create
 		_:
 			print("Error: State '%s' not found or not preloaded!" % new_state_name)
-			# You might want to transition to a "DyingState" or "IdleState" here
 			return
 	
-	# Instantiate the new state script and pass a reference to this Darwin
 	if new_state_script != null:
-		current_state_object = new_state_script.new(self) # 'self' passes this Darwin instance
+		current_state_object = new_state_script.new(self)
 		current_state_name = new_state_name
-		current_state_object._enter() # Call the _enter() method of the new state
+		current_state_object._enter()
 	else:
 		print("Failed to instantiate state: ", new_state_name)
 
 
-# This function remains in Darwin.gd because it uses Darwin's own properties
-# like 'terrain', 'global_position', and 'tile_set'.
-# States will call this method on their 'darwin' reference (e.g., darwin._find_nearest_resource_source(...))
+func get_current_tiledata() -> void:
+	current_tiledata = terrain.get_cell_tile_data(terrain.local_to_map(global_position))
+
+
+func apply_tile_attributes() -> void:
+	if current_tiledata:
+		velocity *= current_tiledata.get_custom_data("movement_modifier")
+	
+	
 func _find_nearest_resource_source(resource_type: String) -> Vector2i:
 	if terrain == null:
 		return Vector2i.ZERO
@@ -127,7 +127,7 @@ func _find_nearest_resource_source(resource_type: String) -> Vector2i:
 
 	var tile_search_radius: int = 5 # How far to search for resources
 	
-	if resource_type == "food": # Only search for Area2D food sources when seeking "food"
+	if resource_type == "food":
 		var search_radius_world: float = terrain.tile_set.tile_size.x * tile_search_radius # Convert tile radius to world units
 		
 		# Get all nodes in the "food_source" group
@@ -165,7 +165,7 @@ func _find_nearest_resource_source(resource_type: String) -> Vector2i:
 	return resource_coords
 
 
-func _update_needs(delta: float):
+func _update_stats(delta: float):
 	# Thirst depletion
 	current_thirst = max(0, current_thirst - thirst_depletion_rate * delta)
 	# Hunger depletion
@@ -173,15 +173,11 @@ func _update_needs(delta: float):
 	# Aging
 	current_age = min(max_age, current_age + delta)
 	
-	# --- Implement Death Conditions Here ---
-	# For now, just print warnings. In your actual game, you'd trigger a "DyingState"
-	# or an actual death event which would log data for "Harvest of Failure".
 	if current_thirst <= 0 and current_hunger <= 0:
 		print("Darwin (", name, ") is critically thirsty and hungry! (Would die here and log failure)")
 		var points = DEATH_POINT_VALUES.get("thirst", 1)
 		EvolutionManager.report_death("thirst", global_position, DEATH_POINT_VALUES.get("thirst", 1))
 		call_deferred("queue_free")
-		# Example: change_state("DyingState")
 	elif current_thirst <= 0:
 		print("Darwin (", name, ") is critically thirsty! (Would die here)")
 		EvolutionManager.report_death("thirst", global_position, DEATH_POINT_VALUES.get("thirst", 1))
@@ -214,22 +210,16 @@ func _spawn_new_creature():
 
 	var new_darwin_instance = creature_scene.instantiate()
 	
-	# Add the new Darwin to the same parent as the current Darwin
-	# This assumes your Darwins are children of a common Node (e.g., a "Darwins" Node2D)
 	add_sibling(new_darwin_instance)
 
 	# Place the new Darwin nearby, with a small random offset
 	var spawn_offset = Vector2(randf_range(-50, 50), randf_range(-50, 50))
 	new_darwin_instance.global_position = global_position + spawn_offset
 	
-	# Initialize offspring's needs (e.g., partially full)
-	new_darwin_instance.current_thirst = new_darwin_instance.max_thirst * 0.5
-	new_darwin_instance.current_hunger = new_darwin_instance.max_hunger * 0.5
-	
 	print("Darwin (", name, ") reproduced! New Darwin spawned at ", new_darwin_instance.global_position)
 	
 	
-# --- Debug Drawing (for visualization during development) ---
+# --- Debug Drawing (for visualization) ---
 func _draw():
 	# Skip drawing in the editor and if essential nodes are missing
 	if Engine.is_editor_hint() or terrain == null: return
@@ -258,7 +248,7 @@ func _draw():
 	@warning_ignore("integer_division")
 	draw_string(ThemeDB.fallback_font, Vector2(-bar_width / 2, -45), state_display_name,0, -1, 16, Color.WHITE)
 	
-	# Optional: Draw a line to the target tile when seeking resources (visual aid)
+	# Draw a line to the target tile when seeking resources (visual aid)
 	if target_tile_coords != Vector2i.ZERO and (current_state_name == "SeekingWaterState" or current_state_name == "SeekingFoodState"):
 		var target_world_pos: Vector2 = terrain.map_to_local(target_tile_coords) + (terrain.tile_set.tile_size / 2.0)
 		# Convert target world position to a local position relative to the Darwin

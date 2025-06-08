@@ -1,4 +1,3 @@
-# EvolutionManager.gd
 extends Node
 
 var evolution_points: int = 0
