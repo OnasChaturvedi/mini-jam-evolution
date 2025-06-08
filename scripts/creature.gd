@@ -19,7 +19,6 @@ extends CharacterBody2D
 @export var reproduction_threshold_thirst: float = 80.0 # Thirst level needed to consider reproducing
 @export var reproduction_threshold_hunger: float = 80.0 # Hunger level needed to consider reproducing
 var creature_scene_path: String = "res://scenes/creature.tscn"
-
 @export var max_age: float = 15
 
 @export var exploration_move_duration: float = 0.5 # How long to move in one direction during exploration
@@ -175,7 +174,6 @@ func _update_stats(delta: float):
 	
 	if current_thirst <= 0 and current_hunger <= 0:
 		print("Darwin (", name, ") is critically thirsty and hungry! (Would die here and log failure)")
-		var points = DEATH_POINT_VALUES.get("thirst", 1)
 		EvolutionManager.report_death("thirst", global_position, DEATH_POINT_VALUES.get("thirst", 1))
 		call_deferred("queue_free")
 	elif current_thirst <= 0:

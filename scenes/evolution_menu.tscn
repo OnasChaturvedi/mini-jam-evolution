@@ -1,0 +1,61 @@
+[gd_scene load_steps=10 format=3 uid="uid://b7dyfrarw4g65"]
+
+[ext_resource type="Texture2D" uid="uid://bbjao2xxnj6ft" path="res://resources/EvolvePanel.png" id="1_33c31"]
+[ext_resource type="Script" uid="uid://c54mhykxxrobo" path="res://scripts/evolution_menu.gd" id="1_lt810"]
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="2_6hr8j"]
+[ext_resource type="Resource" uid="uid://dijxmcpl1nja1" path="res://scripts/Perks/faster_creatures.tres" id="3_uhyg8"]
+[ext_resource type="Resource" uid="uid://b5df5t3mtnb1e" path="res://scripts/Perks/slower_hunger.tres" id="4_w6n7i"]
+[ext_resource type="Resource" uid="uid://cs1gq6vaar6e6" path="res://scripts/Perks/slower_thirst.tres" id="5_qxrge"]
+[ext_resource type="Resource" uid="uid://bdx6cpegrsptq" path="res://scripts/Perks/fast_reproduction.tres" id="6_33c31"]
+[ext_resource type="FontFile" uid="uid://coe32nc7ugkwu" path="res://resources/homespun.ttf" id="7_iptyy"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_33c31"]
+texture = ExtResource("1_33c31")
+texture_margin_left = 2.0
+texture_margin_top = 21.0
+texture_margin_right = 3.0
+texture_margin_bottom = 27.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="EvolutionMenu" type="PanelContainer"]
+process_mode = 2
+custom_minimum_size = Vector2(600, 300)
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_33c31")
+script = ExtResource("1_lt810")
+perks_to_display = Array[ExtResource("2_6hr8j")]([ExtResource("3_uhyg8"), ExtResource("4_w6n7i"), ExtResource("5_qxrge"), ExtResource("6_33c31")])
+
+[node name="MenuVbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MenuVbox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_iptyy")
+theme_override_font_sizes/font_size = 24
+text = "Evolution Menu"
+horizontal_alignment = 1
+
+[node name="PointDisplayLabel" type="Label" parent="MenuVbox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MenuVbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PerksList" type="VBoxContainer" parent="MenuVbox/ScrollContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResumeButton" type="Button" parent="MenuVbox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_iptyy")
+theme_override_font_sizes/font_size = 18
+text = "Resume"

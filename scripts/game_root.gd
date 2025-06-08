@@ -9,6 +9,7 @@ const DeathNotification = preload("res://scenes/death_notification.tscn")
 
 @export var initial_creature_count: int = 10
 @export var creature_scene: PackedScene 	
+@onready var evolution_menu_instance: PanelContainer = $CanvasLayer/EvolutionMenu
 
 func _ready():
 	spawn_initial_creatures()
@@ -70,3 +71,12 @@ func spawn_creature_in_camera_viewport():
 	new_creature_instance.global_position = spawn_position
 	creature_container.add_child(new_creature_instance)
 	print("Spawned creature at: ", spawn_position)
+func _unhandled_input(event: InputEvent):
+	# Check if the "ui_cancel" action (Escape key) was just pressed.
+	if Input.is_action_just_pressed("ui_cancel"):
+		# If the game is already paused, hide the menu.
+		if get_tree().paused:
+			evolution_menu_instance.hide_menu()
+		# Otherwise, show the menu.
+		else:
+			evolution_menu_instance.show_menu()
