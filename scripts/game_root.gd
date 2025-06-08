@@ -2,10 +2,11 @@
 extends Node2D
 
 const DeathNotification = preload("res://scenes/death_notification.tscn")
+@onready var evolution_menu_instance: PanelContainer = $CanvasLayer/EvolutionMenu
+
 func _ready():
 	# Connect to the death signal from the global manager.
 	EvolutionManager.creature_died.connect(on_creature_died)
-
 func on_creature_died(cause: String, position: Vector2):
 	# Create a new instance of the notification.
 	var notification_instance = DeathNotification.instantiate()
@@ -27,3 +28,12 @@ func on_creature_died(cause: String, position: Vector2):
 	
 	# Trigger the animation. The script inside the notification handles the rest.
 	notification_instance.show_message(death_message)
+func _unhandled_input(event: InputEvent):
+	# Check if the "ui_cancel" action (Escape key) was just pressed.
+	if Input.is_action_just_pressed("ui_cancel"):
+		# If the game is already paused, hide the menu.
+		if get_tree().paused:
+			evolution_menu_instance.hide_menu()
+		# Otherwise, show the menu.
+		else:
+			evolution_menu_instance.show_menu()

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Perk" load_steps=2 format=3 uid="uid://cs1gq6vaar6e6"]
+
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="1_ibgh3"]
+
+[resource]
+script = ExtResource("1_ibgh3")
+perk_id = "slower_thirst"
+perk_name = "Strong Kidneys"
+costs_per_level = Array[int]([15, 20, 25])
+descriptions_per_level = Array[String](["Darwinians feel thirsty 10% slower", "Darwinians feel thirsty 15% slower", "Darwinians feel thirsty 20% slower"])
+bonuses_per_level = Array[float]([10.0, 15.0, 20.0])
+metadata/_custom_type_script = "uid://bid2nobr3k8hu"

@@ -20,9 +20,9 @@ extends CharacterBody2D
 @export var reproduction_threshold_hunger: float = 80.0 # Hunger level needed to consider reproducing
 var creature_scene_path: String = "res://scenes/creature.tscn"
 const DEATH_POINT_VALUES = {
-	"thirst": 5,
-	"hunger": 2,
-	"age": 10
+	"thirst": 50,
+	"hunger": 20,
+	"age": 100
 }
 @export var max_age: float = 15
 # --- Exploration State Parameters (moved here from state for editor access) ---
@@ -178,7 +178,6 @@ func _update_needs(delta: float):
 	# or an actual death event which would log data for "Harvest of Failure".
 	if current_thirst <= 0 and current_hunger <= 0:
 		print("Darwin (", name, ") is critically thirsty and hungry! (Would die here and log failure)")
-		var points = DEATH_POINT_VALUES.get("thirst", 1)
 		EvolutionManager.report_death("thirst", global_position, DEATH_POINT_VALUES.get("thirst", 1))
 		call_deferred("queue_free")
 		# Example: change_state("DyingState")
