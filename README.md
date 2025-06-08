@@ -13,8 +13,8 @@
 - [x] Build evolution choice interface
 - [ ] Add visual feedback for deaths, traits, and environmental dangers
 ## Assets
-- [ ] Create terrain tile assets
-- [ ] Design creatures
+- [x] Create terrain tile assets
+- [x] Design creatures
 ## Final Touches
 - [ ] Tune difficulty curve, death rates, and evolution costs
 - [ ] Add tutorial/onboarding explaining the "failure is progress" concept
