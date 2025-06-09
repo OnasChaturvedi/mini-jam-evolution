@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b7dyfrarw4g65"]
+[gd_scene load_steps=18 format=3 uid="uid://b7dyfrarw4g65"]
 
 [ext_resource type="Texture2D" uid="uid://bbjao2xxnj6ft" path="res://resources/EvolvePanel.png" id="1_33c31"]
 [ext_resource type="Script" uid="uid://c54mhykxxrobo" path="res://scripts/evolution_menu.gd" id="1_lt810"]
@@ -7,7 +7,15 @@
 [ext_resource type="Resource" uid="uid://b5df5t3mtnb1e" path="res://scripts/Perks/slower_hunger.tres" id="4_w6n7i"]
 [ext_resource type="Resource" uid="uid://cs1gq6vaar6e6" path="res://scripts/Perks/slower_thirst.tres" id="5_qxrge"]
 [ext_resource type="Resource" uid="uid://bdx6cpegrsptq" path="res://scripts/Perks/fast_reproduction.tres" id="6_33c31"]
+[ext_resource type="Resource" uid="uid://xtthpg1rslfs" path="res://scripts/Perks/fast_eating.tres" id="6_iptyy"]
 [ext_resource type="FontFile" uid="uid://coe32nc7ugkwu" path="res://resources/homespun.ttf" id="7_iptyy"]
+[ext_resource type="Resource" uid="uid://bbj7r5sa8x465" path="res://scripts/Perks/fast_drinking.tres" id="8_afuvp"]
+[ext_resource type="Resource" uid="uid://c5w7ot78uj70m" path="res://scripts/Perks/less_taxing_reproduction.tres" id="10_3cqyb"]
+[ext_resource type="Resource" uid="uid://b06tsndhfl3i6" path="res://scripts/Perks/longer_age.tres" id="10_f7ym5"]
+[ext_resource type="Resource" uid="uid://6qj1nlbn0a7l" path="res://scripts/Perks/temp_regulation.tres" id="12_i0gfn"]
+[ext_resource type="Resource" uid="uid://tdhtrujyt77o" path="res://scripts/Perks/more_health.tres" id="13_4gtgt"]
+[ext_resource type="Resource" uid="uid://dgh2lmtuyp4np" path="res://scripts/Perks/more_attack.tres" id="14_xd0wt"]
+[ext_resource type="Script" uid="uid://covdfl7n8rn36" path="res://scripts/ascend_button.gd" id="16_xd0wt"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_33c31"]
 texture = ExtResource("1_33c31")
@@ -22,12 +30,13 @@ expand_margin_bottom = 2.0
 
 [node name="EvolutionMenu" type="PanelContainer"]
 process_mode = 2
-custom_minimum_size = Vector2(600, 300)
-offset_right = 40.0
-offset_bottom = 40.0
+visible = false
+custom_minimum_size = Vector2(1000, 500)
+offset_right = 600.0
+offset_bottom = 300.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_33c31")
 script = ExtResource("1_lt810")
-perks_to_display = Array[ExtResource("2_6hr8j")]([ExtResource("3_uhyg8"), ExtResource("4_w6n7i"), ExtResource("5_qxrge"), ExtResource("6_33c31")])
+perks_to_display = Array[ExtResource("2_6hr8j")]([ExtResource("3_uhyg8"), ExtResource("4_w6n7i"), ExtResource("6_iptyy"), ExtResource("5_qxrge"), ExtResource("8_afuvp"), ExtResource("6_33c31"), ExtResource("10_3cqyb"), ExtResource("10_f7ym5"), ExtResource("12_i0gfn"), ExtResource("13_4gtgt"), ExtResource("14_xd0wt")])
 
 [node name="MenuVbox" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -52,6 +61,15 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="AscendButton" type="Button" parent="MenuVbox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_iptyy")
+theme_override_font_sizes/font_size = 18
+disabled = true
+text = "Ascend"
+script = ExtResource("16_xd0wt")
 
 [node name="ResumeButton" type="Button" parent="MenuVbox"]
 unique_name_in_owner = true

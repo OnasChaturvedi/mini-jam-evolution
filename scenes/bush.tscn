@@ -1,16 +1,17 @@
 [gd_scene load_steps=4 format=3 uid="uid://c2lbuipkhgatn"]
 
 [ext_resource type="Script" uid="uid://1bgynohslna3" path="res://scripts/bush.gd" id="1_ehqem"]
-[ext_resource type="Texture2D" uid="uid://c1hb5mvj0kwi3" path="res://resources/bush.png" id="1_lad4k"]
+[ext_resource type="Texture2D" uid="uid://d1lmhg07hio4c" path="res://resources/betterbush.png" id="2_ehqem"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lad4k"]
-radius = 8.0
+radius = 14.0
 
 [node name="Bush" type="Area2D" groups=["food_source"]]
+scale = Vector2(0.9, 0.9)
 script = ExtResource("1_ehqem")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_lad4k")
+texture = ExtResource("2_ehqem")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 4)

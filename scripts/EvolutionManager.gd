@@ -27,6 +27,8 @@ const ROMAN_NUMERALS = {
 var evolution_points: int = 0
 var unlocked_perks: Dictionary = {}
 
+var cost_multiplier: float = 1
+
 signal evolution_points_changed(new_points)
 signal creature_died(cause_of_death, position)
 
@@ -38,6 +40,7 @@ func add_points(amount: int):
 	
 # This function now accepts a 'points_value' argument.
 func report_death(cause: String, position: Vector2, points_value: int):
+	AudioManager.play_die_sound()
 	creature_died.emit(cause, position)
 	# Add the points that were passed in.
 	add_points(points_value)
@@ -67,7 +70,7 @@ func upgrade_perk(perk: Perk):
 		unlocked_perks[perk.perk_id].level = 1 # First purchase is level 1
 	else:
 		unlocked_perks[perk.perk_id].level += 1 # Subsequent purchases increase the level
-	unlocked_perks[perk.perk_id].bonus = perk.bonuses_per_level[get_perk_level(perk.perk_id) - 1]
+	unlocked_perks[perk.perk_id].bonus = perk.bonuses_per_level[get_perk_level(perk.perk_id)]
 	perk_unlocked.emit(perk.perk_id) # We can still emit this signal
 	print(unlocked_perks)
 	

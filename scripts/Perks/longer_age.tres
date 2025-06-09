@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Perk" load_steps=2 format=3 uid="uid://b06tsndhfl3i6"]
+
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="1_qhjlu"]
+
+[resource]
+script = ExtResource("1_qhjlu")
+perk_id = "longer_age"
+perk_name = "Monk's Longevity"
+costs_per_level = Array[int]([10, 15, 25, 35, 50, 75, 115, 170, 250])
+descriptions_per_level = Array[String](["Darwins live 10% longer", "Darwins live 20% longer", "Darwins live 30% longer", "Darwins live 40% longer", "Darwins live 50% longer", "Darwins live 60% longer", "Darwins live 70% longer", "Darwins live 80% longer", "Darwins live 90% longer"])
+bonuses_per_level = Array[float]([1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9])

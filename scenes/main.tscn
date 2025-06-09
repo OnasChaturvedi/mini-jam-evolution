@@ -1,58 +1,70 @@
-[gd_scene load_steps=16 format=3 uid="uid://c4c6gs01cvtfg"]
+[gd_scene load_steps=18 format=3 uid="uid://c4c6gs01cvtfg"]
 
 [ext_resource type="Script" uid="uid://b6ea25cds57ci" path="res://scripts/world.gd" id="1_0wfyh"]
 [ext_resource type="Script" uid="uid://bo42wsg68h15x" path="res://scripts/game_root.gd" id="1_tefeu"]
 [ext_resource type="PackedScene" uid="uid://c2lbuipkhgatn" path="res://scenes/bush.tscn" id="2_jyhfs"]
-[ext_resource type="Texture2D" uid="uid://dmh0jwqovgr54" path="res://resources/TilesetV3.png" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://cfva7i8vpovtj" path="res://scenes/creature.tscn" id="3_sugp2"]
-[ext_resource type="Script" path="res://scripts/canvas_layer.gd" id="6_o6xl0"]
+[ext_resource type="Script" uid="uid://k1pqcim01rtn" path="res://scripts/canvas_layer.gd" id="6_o6xl0"]
+[ext_resource type="Texture2D" uid="uid://bqkj7hwnx2a7t" path="res://resources/TilesetFinal.png" id="6_ya4ey"]
 [ext_resource type="Texture2D" uid="uid://4o535n2kaew1" path="res://resources/OverlayEP.png" id="7_85g3d"]
 [ext_resource type="Texture2D" uid="uid://bcw5qy8m82ht8" path="res://resources/DNA Icons.png" id="7_o6xl0"]
 [ext_resource type="FontFile" uid="uid://coe32nc7ugkwu" path="res://resources/homespun.ttf" id="9_choun"]
 [ext_resource type="PackedScene" uid="uid://b7dyfrarw4g65" path="res://scenes/evolution_menu.tscn" id="10_choun"]
+[ext_resource type="PackedScene" uid="uid://c5hvoj3vtyste" path="res://scenes/enemy.tscn" id="11_ya4ey"]
+[ext_resource type="AudioStream" uid="uid://cq0epv2sccr54" path="res://assets/8bitmusic.mp3" id="12_eb6dy"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tbgi4"]
-texture = ExtResource("3_jyhfs")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ya4ey"]
+texture = ExtResource("6_ya4ey")
+texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 0:0/0/custom_data_0 = "water"
-0:0/0/custom_data_1 = 0.5
+0:0/0/custom_data_1 = 0.4
+0:0/0/custom_data_2 = -40.0
 1:0/0 = 0
 1:0/0/custom_data_0 = "tundra"
 1:0/0/custom_data_1 = 0.6
+1:0/0/custom_data_2 = -105.0
 2:0/0 = 0
 2:0/0/custom_data_0 = "taiga"
-2:0/0/custom_data_1 = 0.9
+2:0/0/custom_data_1 = 0.8
+2:0/0/custom_data_2 = -30.0
 0:1/0 = 0
 0:1/0/custom_data_0 = "grassland"
 0:1/0/custom_data_1 = 1.0
 1:1/0 = 0
 1:1/0/custom_data_0 = "forest"
-1:1/0/custom_data_1 = 0.9
+1:1/0/custom_data_1 = 0.8
+1:1/0/custom_data_2 = 20.0
 2:1/0 = 0
 2:1/0/custom_data_0 = "desert"
-2:1/0/custom_data_1 = 0.8
+2:1/0/custom_data_1 = 0.9
+2:1/0/custom_data_2 = 105.0
 0:2/0 = 0
 0:2/0/custom_data_0 = "jungle"
-0:2/0/custom_data_1 = 0.85
+0:2/0/custom_data_1 = 0.7
+0:2/0/custom_data_2 = 40.0
 1:2/0 = 0
 1:2/0/custom_data_0 = "savanna"
 1:2/0/custom_data_1 = 1.0
+1:2/0/custom_data_2 = 30.0
 2:2/0 = 0
 2:2/0/custom_data_0 = "steppe"
 2:2/0/custom_data_1 = 1.0
+2:2/0/custom_data_2 = 10.0
 0:3/0 = 0
 0:3/0/custom_data_0 = "lava"
-0:3/0/custom_data_1 = 0.2
+0:3/0/custom_data_1 = 0.3
+0:3/0/custom_data_2 = 250.0
 
 [sub_resource type="TileSet" id="TileSet_0jgge"]
+tile_size = Vector2i(32, 32)
 custom_data_layer_0/name = "terrain_type"
 custom_data_layer_0/type = 4
 custom_data_layer_1/name = "movement_modifier"
 custom_data_layer_1/type = 3
-sources/1 = SubResource("TileSetAtlasSource_tbgi4")
-
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_sugp2"]
-distance = 1.0
+custom_data_layer_2/name = "temperature"
+custom_data_layer_2/type = 3
+sources/1 = SubResource("TileSetAtlasSource_ya4ey")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ya4ey"]
 texture = ExtResource("7_85g3d")
@@ -64,47 +76,28 @@ texture_margin_bottom = 15.0
 [sub_resource type="Theme" id="Theme_eb6dy"]
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_ya4ey")
 
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_sugp2"]
+distance = 1.0
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_tefeu")
-initial_creature_count = 100
+initial_creature_count = 5
 creature_scene = ExtResource("3_sugp2")
+enemy_scene = ExtResource("11_ya4ey")
 
 [node name="ReloadDelayTimer" type="Timer" parent="."]
 wait_time = 2.0
 
 [node name="World" type="Node2D" parent="." node_paths=PackedStringArray("tile_map_node")]
 script = ExtResource("1_0wfyh")
+world_width = 150
+world_height = 150
+tile_size = 32
 tile_map_node = NodePath("Terrain")
 bush_scene = ExtResource("2_jyhfs")
 
 [node name="Terrain" type="TileMapLayer" parent="World"]
 tile_set = SubResource("TileSet_0jgge")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(576, 336)
-zoom = Vector2(1, 0.964)
-
-[node name="WorldBorder" type="StaticBody2D" parent="."]
-collision_layer = 3
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldBorder"]
-position = Vector2(588, 673)
-shape = SubResource("WorldBoundaryShape2D_sugp2")
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="WorldBorder"]
-position = Vector2(539, 0)
-rotation = 3.14159
-shape = SubResource("WorldBoundaryShape2D_sugp2")
-
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="WorldBorder"]
-position = Vector2(0, 283)
-rotation = 1.5708
-shape = SubResource("WorldBoundaryShape2D_sugp2")
-
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="WorldBorder"]
-position = Vector2(1151, 336)
-rotation = -1.5708
-shape = SubResource("WorldBoundaryShape2D_sugp2")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 script = ExtResource("6_o6xl0")
@@ -159,3 +152,32 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="CreatureContainer" type="Node2D" parent="."]
+
+[node name="EnemyContainer" type="Node2D" parent="."]
+
+[node name="WorldBorder" type="StaticBody2D" parent="."]
+collision_layer = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldBorder"]
+position = Vector2(662, 1083)
+shape = SubResource("WorldBoundaryShape2D_sugp2")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="WorldBorder"]
+position = Vector2(539, 0)
+rotation = 3.14159
+shape = SubResource("WorldBoundaryShape2D_sugp2")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="WorldBorder"]
+position = Vector2(0, 283)
+rotation = 1.5708
+shape = SubResource("WorldBoundaryShape2D_sugp2")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="WorldBorder"]
+position = Vector2(1924, 564)
+rotation = -1.5708
+shape = SubResource("WorldBoundaryShape2D_sugp2")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_eb6dy")
+volume_db = -13.0
+autoplay = true

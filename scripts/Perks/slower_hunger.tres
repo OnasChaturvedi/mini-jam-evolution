@@ -6,6 +6,6 @@
 script = ExtResource("1_q2esa")
 perk_id = "slower_hunger"
 perk_name = "Efficient Digestion"
-costs_per_level = Array[int]([10, 15, 20, 25])
-descriptions_per_level = Array[String](["Darwinians feel hungry 10% slower", "Darwinians feel hungry 15% slower", "Darwinians feel hungry 20% slower", "Darwinians feel hungry 25% slower"])
-bonuses_per_level = Array[float]([0.9, 0.85, 0.8, 0.75])
+costs_per_level = Array[int]([15, 25, 35, 50, 75, 115, 170, 250, 380, 570])
+descriptions_per_level = Array[String](["Darwinians feel hungry 5% slower", "Darwinians feel hungry 10% slower", "Darwinians feel hungry 15% slower", "Darwinians feel hungry 20% slower", "Darwinians feel hungry 25% slower", "Darwinians feel hungry 30% slower", "Darwinians feel hungry 35% slower", "Darwinians feel hungry 40% slower", "Darwinians feel hungry 45% slower", "Darwinians feel hungry 50% slower"])
+bonuses_per_level = Array[float]([1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5])

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Perk" load_steps=2 format=3 uid="uid://xtthpg1rslfs"]
+
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="1_fi3hb"]
+
+[resource]
+script = ExtResource("1_fi3hb")
+perk_id = "fast_eating"
+perk_name = "Ravenous Appetite"
+costs_per_level = Array[int]([25, 40, 60, 85, 125])
+descriptions_per_level = Array[String](["Darwins eat 15% faster", "Darwins eat 30% faster", "Darwins eat 45% faster", "Darwins eat 60% faster", "Darwins eat 75% faster"])
+bonuses_per_level = Array[float]([1.0, 1.15, 1.3, 1.45, 1.6, 1.75])

@@ -1,0 +1,58 @@
+[gd_scene load_steps=3 format=3 uid="uid://c1g50h2avck3w"]
+
+[ext_resource type="PackedScene" uid="uid://t2dui8ppm3a4" path="res://addons/maaacks_credits_scene/base/scenes/credits/credits.tscn" id="1_n45le"]
+[ext_resource type="Script" uid="uid://eqquemmbk6ua" path="res://addons/maaacks_credits_scene/examples/scenes/credits/credits.gd" id="2_q7msw"]
+
+[node name="Credits" instance=ExtResource("1_n45le")]
+script = ExtResource("2_q7msw")
+attribution_file_path = "res://resources/credits.md"
+current_speed = 0.5
+
+[node name="HeaderSpace" parent="ScrollContainer/VBoxContainer" index="0"]
+custom_minimum_size = Vector2(0, 1080)
+
+[node name="CreditsLabel" parent="ScrollContainer/VBoxContainer" index="1"]
+custom_minimum_size = Vector2(1920, 0)
+text = "[center][font_size=48]The Darwinians evolved rapidly.[/font_size]
+[font_size=48]They discovered the passion of art.[/font_size]
+[font_size=48]The strength of machines.[/font_size]
+[font_size=48]The power of intellect.[/font_size]
+[font_size=48]They went through an industrial revolution and technology rapidly grew.[/font_size]
+[font_size=48]Life expectancy shot up, quality of life alongside it too.[/font_size]
+[font_size=48]Then they invented the nuke and killed the entire planet [/font_size]
+[font_size=64]:)[/font_size]
+[font_size=64]END[/font_size]
+
+[font_size=64]Lead Programmer[/font_size]
+[font_size=48]Onas[/font_size]
+[font_size=64]Programmer[/font_size]
+[font_size=48]Hexager[/font_size]
+[font_size=64]Lead Artist[/font_size]
+[font_size=48]Hexager[/font_size]
+[font_size=64]Artist[/font_size]
+[font_size=48]Onas[/font_size]
+
+
+
+
+[font_size=32]Thanks for playing our first game jam submission![/font_size]
+
+
+
+
+
+[font_size=32]Sorry for playing our first game jam submission.[/font_size]
+[/center]"
+
+[node name="FooterSpace" parent="ScrollContainer/VBoxContainer" index="2"]
+custom_minimum_size = Vector2(0, 1080)
+
+[node name="ColorRect" type="ColorRect" parent="." index="2"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0885599, 0.0885599, 0.0885599, 1)
