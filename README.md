@@ -16,6 +16,6 @@
 - [x] Create terrain tile assets
 - [x] Design creatures
 ## Final Touches
-- [ ] Tune difficulty curve, death rates, and evolution costs
+- [x] Tune difficulty curve, death rates, and evolution costs
 - [ ] Add tutorial/onboarding explaining the "failure is progress" concept
-- [ ] Visual enhancement??
+- [x] Visual enhancement??
