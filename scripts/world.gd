@@ -99,6 +99,12 @@ var biomes: Dictionary = {
 		"tile_coords": Vector2i(2, 2),    # Example tile coord, adjust as needed in TileSet
 		"bush_spawn_chance": 0.05         # Low chance in steppe
 	},
+	"Lava": {
+		"temp_range": Vector2(0.3, 0.7),
+		"humid_range": Vector2(0.0, 0.5),
+		"tile_coords": Vector2i(0, 3), 
+		"bush_spawn_chance": 0.0        
+	}
 }
 
 # --- Internal Variables ---
@@ -215,9 +221,11 @@ func determine_biomes():
 			var humid_val = humidity_map[x][y]
 			var determined_biome: String = "Unknown"
 
-			# 1. First, check for water based on height
-			if height_val < water_level:
-				determined_biome = "Ocean" # Always ocean if below water_level
+	
+			if temp_val > 0.8 and height_val < water_level:
+				determined_biome = "Lava"
+			elif height_val < water_level:
+				determined_biome = "Ocean" 
 			else:
 				# 2. If it's land, determine biome based on temperature and humidity.
 				# Iterate through all defined land biomes. The order in the dictionary
@@ -242,7 +250,8 @@ func determine_biomes():
 			if determined_biome == "Unknown":
 				print("DEBUG: Unknown biome at (" + str(x) + ", " + str(y) +
 					  ") - Height: " + str(height_val) + ", Temperature: " + str(temp_val) + ", Humidity: " + str(humid_val))
-
+				determined_biome = "Ocean"
+				
 			biome_map[x][y] = determined_biome
 			
 	print("Biomes determined.")

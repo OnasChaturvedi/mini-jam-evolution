@@ -26,6 +26,10 @@ func _physics_process(delta: float):
 		if darwin.current_hunger <= darwin.hunger_threshold:
 			change_state("SeekingFoodState")
 			return
+		if darwin is Enemy:
+			if randi() % 2 == 0:
+				change_state("FightingState")
+				return
 		if darwin.current_thirst >= darwin.reproduction_threshold_thirst and darwin.current_hunger >= darwin.reproduction_threshold_hunger:
 			change_state("ReproducingState")
 			return
@@ -47,24 +51,14 @@ func _exit():
 	## Randomize the duration slightly
 	#exploration_timer = darwin.exploration_move_duration + randf() * darwin.exploration_move_duration
 
-func _set_new_global_exploration_goal():
-	var camera_node: Camera2D = darwin.get_viewport().get_camera_2d()
+func _set_new_global_exploration_goal():	
+	var viewport_rect: Rect2 = darwin.get_viewport_rect()
 	
-	if camera_node != null:
-		var viewport_rect: Rect2 = camera_node.get_viewport_rect()
-		
-		var viewport_top_left_global = camera_node.global_position - viewport_rect.size / 2.0
-		var viewport_bottom_right_global = camera_node.global_position + viewport_rect.size / 2.0
-
-		# Choose a random point within these global bounds
-		var random_x = randf_range(viewport_top_left_global.x, viewport_bottom_right_global.x)
-		var random_y = randf_range(viewport_top_left_global.y, viewport_bottom_right_global.y)
-		darwin.current_global_exploration_goal = Vector2(random_x, random_y)
-		#print("Darwin (", darwin.name, ") set new global exploration goal: ", darwin.current_global_exploration_goal)
-	else:
-		print("Warning: Camera2D not found for exploration. Falling back to simple random direction.")
-		_set_new_exploration_step_direction() 
-		darwin.current_global_exploration_goal = darwin.global_position
+	# Choose a random point within these global bounds
+	var random_x = randf_range(viewport_rect.position.x, viewport_rect.position.x + viewport_rect.size.x)
+	var random_y = randf_range(viewport_rect.position.y, viewport_rect.position.y + viewport_rect.size.y)
+	
+	darwin.current_global_exploration_goal = Vector2(random_x, random_y)
 
 
 # --- MODIFIED: Function to calculate the direction for the current small step ---

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Perk" load_steps=2 format=3 uid="uid://c5w7ot78uj70m"]
+
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="1_ndn7h"]
+
+[resource]
+script = ExtResource("1_ndn7h")
+perk_id = "less_taxing_reproduction"
+perk_name = "Budget Breeding"
+costs_per_level = Array[int]([25, 40, 60, 85, 125, 185])
+descriptions_per_level = Array[String](["Darwins consume 15% less resources during reproduction", "Darwins consume 30% less resources during reproduction", "Darwins consume 45% less resources during reproduction", "Darwins consume 60% less resources during reproduction", "Darwins consume 75% less resources during reproduction", "Darwins consume 90% less resources during reproduction"])
+bonuses_per_level = Array[float]([1.0, 0.85, 0.7, 0.55, 0.4, 0.25, 0.1])

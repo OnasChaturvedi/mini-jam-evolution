@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Perk" load_steps=2 format=3 uid="uid://dgh2lmtuyp4np"]
+
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="1_746o7"]
+
+[resource]
+script = ExtResource("1_746o7")
+perk_id = "more_attack"
+perk_name = "Strong Arms"
+costs_per_level = Array[int]([20, 30, 45, 70, 100])
+descriptions_per_level = Array[String](["Darwins are 10% stronger", "Darwins are 20% stronger", "Darwins are 30% stronger", "Darwins are 40% stronger", "Darwins are 50% stronger"])
+bonuses_per_level = Array[float]([1.0, 1.1, 1.2, 1.3, 1.4, 1.5])

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Perk" load_steps=2 format=3 uid="uid://bbj7r5sa8x465"]
+
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="1_ixggd"]
+
+[resource]
+script = ExtResource("1_ixggd")
+perk_id = "fast_drinking"
+perk_name = "Scorching Thirst"
+costs_per_level = Array[int]([25, 40, 60, 85, 125])
+descriptions_per_level = Array[String](["Darwins drink 15% faster", "Darwins drink 30% faster", "Darwins drink 45% faster", "Darwins drink 60% faster", "Darwins drink 75% faster"])
+bonuses_per_level = Array[float]([1.0, 1.15, 1.3, 1.45, 1.6, 1.75])

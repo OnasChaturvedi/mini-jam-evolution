@@ -1,30 +1,47 @@
 extends CharacterBody2D
+class_name Darwin
 
 @export var speed: float = 100.0
 
 # --- Core Needs ---
+@export var max_health: float = 100.0
+
+@export var max_temp: float = 100.0
+@export var min_temp: float = -100.0
+@export var temp_regulation_rate: float = 1
+
 @export var max_thirst: float = 100.0
-@export var thirst_depletion_rate: float = 5.0 # How much thirst depletes per second
-@export var hydration_rate: float = 20.0 # How much thirst is restored per second when drinking
+@export var thirst_depletion_rate: float = 7.0 # How much thirst depletes per second
+@export var hydration_rate: float = 22.0 # How much thirst is restored per second when drinking
 @export var hydration_threshold: float = 50.0 # Thirst level at which Darwin starts seeking water
 
 @export var max_hunger: float = 100.0
-@export var hunger_depletion_rate: float = 3.0 # How much hunger depletes per second
-@export var satiation_rate: float = 15.0 # How much hunger is restored per second when eating
-@export var hunger_threshold: float = 60.0 # Hunger level at which Darwin starts seeking food
+@export var hunger_depletion_rate: float = 5.0 # How much hunger depletes per second
+@export var satiation_rate: float = 17.0 # How much hunger is restored per second when eating
+@export var hunger_threshold: float = 50.0 # Hunger level at which Darwin starts seeking food
 
-@export var reproduction_thirst_cost: float = 30.0   # Thirst consumed during reproduction
-@export var reproduction_hunger_cost: float = 30.0   # Hunger consumed during reproduction
+@export var reproduction_thirst_cost: float = 50.0   # Thirst consumed during reproduction
+@export var reproduction_hunger_cost: float = 50.0   # Hunger consumed during reproduction
 @export var reproduction_time: float = 2.0           # How long reproduction takes (animation/delay)
 @export var reproduction_threshold_thirst: float = 80.0 # Thirst level needed to consider reproducing
 @export var reproduction_threshold_hunger: float = 80.0 # Hunger level needed to consider reproducing
 var creature_scene_path: String = "res://scenes/creature.tscn"
+
 @export var max_age: float = 15
+
+@export var attack_damage: float = 40.0
+@export var attack_range_tiles: int = 2
+@export var attacker: Enemy
 
 @export var exploration_move_duration: float = 0.5 # How long to move in one direction during exploration
 var current_global_exploration_goal: Vector2 = Vector2.ZERO 
 
 @onready var terrain: TileMapLayer = $"../../World/Terrain"
+@onready var temperature_bar: TextureProgressBar = $StatusBars/TemperatureBar
+@onready var thirst_bar: TextureProgressBar = $StatusBars/ThirstBar
+@onready var hunger_bar: TextureProgressBar = $StatusBars/HungerBar
+@onready var health_bar: TextureProgressBar = $StatusBars/HealthBar
+
 
 var current_state_object: State = null # Holds the actual instantiated state object
 var current_state_name: String = "" # Stores the string name of the current state
@@ -35,17 +52,23 @@ const DRINKING_STATE = preload("res://scripts/ai_states/drinking_state.gd")
 const SEEKING_FOOD_STATE = preload("res://scripts/ai_states/seeking_food_state.gd")
 const EATING_STATE = preload("res://scripts/ai_states/eating_state.gd")
 const REPRODUCING_STATE = preload("res://scripts/ai_states/reproducing_state.gd")
+const FIGHTING_STATE = preload("res://scripts/ai_states/creature_fighting_state.gd")
 
 const DEATH_POINT_VALUES = {
-	"thirst": 5,
-	"hunger": 2,
-	"age": 10
+	"thirst": 4,
+	"hunger": 6,
+	"age": 12,
+	"murder": 8,
+	"freezing": 7,
+	"overheating": 7
 }
 
 # --- Darwin Attributes (Current Values) ---
 # These are accessed by the state objects via the 'darwin' reference
 var current_thirst: float = 0.0
 var current_hunger: float = 0.0
+var current_health: float = 0.0
+var current_temp: float = 0.0
 var current_age: float = 0.0
 var current_tiledata: TileData
 var target_tile_coords: Vector2i = Vector2i.ZERO # Stores the coordinates of the tile the Darwin is moving towards
@@ -63,10 +86,19 @@ func _ready() -> void:
 		reproduction_time *= perk_dict["fast_reproduction"].bonus
 		hunger_depletion_rate *= perk_dict["slower_hunger"].bonus
 		thirst_depletion_rate *= perk_dict["slower_thirst"].bonus
+		hydration_rate *= perk_dict["fast_drinking"].bonus
+		satiation_rate *= perk_dict["fast_eating"].bonus
+		max_age *= perk_dict["longer_age"].bonus
+		reproduction_hunger_cost *= perk_dict["less_taxing_reproduction"].bonus
+		reproduction_thirst_cost *= perk_dict["less_taxing_reproduction"].bonus
+		temp_regulation_rate *= perk_dict["temp_regulation"].bonus
+		attack_damage *= perk_dict["more_attack"].bonus
+		max_health *= perk_dict["more_health"].bonus
 	
 	current_thirst = max_thirst * max(0.4, randf())
 	current_hunger = max_hunger * max(0.4, randf())
-	max_age *= randf_range(0.5, 1.5)
+	current_health = max_health
+	max_age *= randf_range(0.8, 1.2)
 	
 	current_global_exploration_goal = global_position
 	change_state("ExplorationState")
@@ -83,7 +115,8 @@ func _physics_process(delta: float) -> void:
 	
 	move_and_slide()
 	
-	queue_redraw()
+	update_status_bars()
+	#queue_redraw()
 
 
 # This is the central function for changing states
@@ -102,6 +135,7 @@ func change_state(new_state_name: String):
 		"SeekingFoodState": new_state_script = SEEKING_FOOD_STATE
 		"EatingState": new_state_script = EATING_STATE
 		"ReproducingState": new_state_script = REPRODUCING_STATE
+		"FightingState": new_state_script = FIGHTING_STATE
 		_:
 			print("Error: State '%s' not found or not preloaded!" % new_state_name)
 			return
@@ -112,6 +146,13 @@ func change_state(new_state_name: String):
 		current_state_object._enter()
 	else:
 		print("Failed to instantiate state: ", new_state_name)
+
+
+func take_damage(damage_amt: float, enemy_attacking: Enemy):
+	attacker = enemy_attacking
+	current_health -= damage_amt
+	print("ouch my hp is ", current_health)
+	change_state("FightingState")
 
 
 func get_current_tiledata() -> void:
@@ -178,24 +219,28 @@ func _update_stats(delta: float):
 	current_hunger = max(0, current_hunger - hunger_depletion_rate * delta)
 	# Aging
 	current_age = min(max_age, current_age + delta)
+	# Temperature
+	if current_tiledata:
+		var current_tile_temp: float = current_tiledata.get_custom_data("temperature")
+		current_temp = lerp(current_temp, current_tile_temp, 0.5 * temp_regulation_rate * delta)
 	
-	if current_thirst <= 0 and current_hunger <= 0:
-		#print("Darwin (", name, ") is critically thirsty and hungry! (Would die here and log failure)")
-		EvolutionManager.report_death("thirst", global_position, DEATH_POINT_VALUES.get("thirst", 1))
+	if current_health <= 0:
+		EvolutionManager.report_death("murder", global_position, DEATH_POINT_VALUES.get("murder", 1))
 		call_deferred("queue_free")
 	elif current_thirst <= 0:
-		#print("Darwin (", name, ") is critically thirsty! (Would die here)")
 		EvolutionManager.report_death("thirst", global_position, DEATH_POINT_VALUES.get("thirst", 1))
 		call_deferred("queue_free")
 	elif current_hunger <= 0:
-		#print("Darwin (", name, ") is critically hungry! (Would die here)")
-		var points = DEATH_POINT_VALUES.get("hunger", 1)
 		EvolutionManager.report_death("hunger", global_position, DEATH_POINT_VALUES.get("hunger", 1))
 		call_deferred("queue_free")
 	elif current_age >= max_age:
-		#print("Darwin died of old age")
-		var points = DEATH_POINT_VALUES.get("age", 1)
 		EvolutionManager.report_death("age", global_position, DEATH_POINT_VALUES.get("age", 1))
+		call_deferred("queue_free")
+	elif current_temp <= min_temp:
+		EvolutionManager.report_death("freezing", global_position, DEATH_POINT_VALUES.get("freezing", 1))
+		call_deferred("queue_free")
+	elif current_temp >= max_temp:
+		EvolutionManager.report_death("overheating", global_position, DEATH_POINT_VALUES.get("overheating", 1))
 		call_deferred("queue_free")
 
 
@@ -223,38 +268,64 @@ func _spawn_new_creature():
 	
 	#print("Darwin (", name, ") reproduced! New Darwin spawned at ", new_darwin_instance.global_position)
 	
+func update_status_bars():
+	var thirst_fill_val = 100 * (current_thirst / max_thirst)
+	var hunger_fill_val = 100 * (current_hunger / max_hunger)
+	var health_fill_val = 100 * (current_health / max_health)
+	var temp_fill_val = 100 * ((current_temp + max_temp) / (max_temp - min_temp))
+	var state_display_name = current_state_name.replace("State", "").replace("_", " ").capitalize()
+	
+	thirst_bar.value = thirst_fill_val
+	hunger_bar.value = hunger_fill_val
+	health_bar.value = health_fill_val
+	temperature_bar.value = temp_fill_val
+	
 	
 # --- Debug Drawing (for visualization) ---
-func _draw():
-	# Skip drawing in the editor and if essential nodes are missing
-	if Engine.is_editor_hint() or terrain == null: return
-	
-	var bar_width = 40
-	var bar_height = 5
-	
-	# Draw Thirst Bar (Blue)
-	var thirst_fill_width = bar_width * (current_thirst / max_thirst)
-	@warning_ignore("integer_division")
-	var thirst_bar_pos = Vector2(-bar_width / 2, -30) # Position above Darwin
-	draw_rect(Rect2(thirst_bar_pos, Vector2(bar_width, bar_height)), Color.GRAY, false) # Background
-	draw_rect(Rect2(thirst_bar_pos, Vector2(thirst_fill_width, bar_height)), Color.BLUE) # Fill
-
-	# Draw Hunger Bar (Green)
-	var hunger_fill_width = bar_width * (current_hunger / max_hunger)
-	@warning_ignore("integer_division")
-	var hunger_bar_pos = Vector2(-bar_width / 2, -20) # Slightly below thirst bar
-	draw_rect(Rect2(hunger_bar_pos, Vector2(bar_width, bar_height)), Color.GRAY, false) # Background
-	draw_rect(Rect2(hunger_bar_pos, Vector2(hunger_fill_width, bar_height)), Color.GREEN) # Fill
-
-	# Draw current state name text
-	# IMPORTANT: You need a default font set in Project Settings > Gui > Theme > Default Font
-	# OR load one in _ready() and assign it.
-	var state_display_name = current_state_name.replace("State", "").replace("_", " ").capitalize()
-	@warning_ignore("integer_division")
-	draw_string(ThemeDB.fallback_font, Vector2(-bar_width / 2, -45), state_display_name,0, -1, 16, Color.WHITE)
-	
-	# Draw a line to the target tile when seeking resources (visual aid)
-	if target_tile_coords != Vector2i.ZERO and (current_state_name == "SeekingWaterState" or current_state_name == "SeekingFoodState"):
-		var target_world_pos: Vector2 = terrain.map_to_local(target_tile_coords) + (terrain.tile_set.tile_size / 2.0)
-		# Convert target world position to a local position relative to the Darwin
-		draw_line(Vector2.ZERO, to_local(target_world_pos), Color.YELLOW, 2)
+#func _draw():
+	## Skip drawing in the editor and if essential nodes are missing
+	#if Engine.is_editor_hint() or terrain == null: return
+	#
+	#var bar_width = 40
+	#var bar_height = 5
+	#
+	## Draw Thirst Bar (Blue)
+	#var thirst_fill_width = bar_width * (current_thirst / max_thirst)
+	#@warning_ignore("integer_division")
+	#var thirst_bar_pos = Vector2(-bar_width / 2, -50) # Position above Darwin
+	#draw_rect(Rect2(thirst_bar_pos, Vector2(bar_width, bar_height)), Color.GRAY, false) # Background
+	#draw_rect(Rect2(thirst_bar_pos, Vector2(thirst_fill_width, bar_height)), Color.BLUE) # Fill
+#
+	## Draw Hunger Bar (Green)
+	#var hunger_fill_width = bar_width * (current_hunger / max_hunger)
+	#@warning_ignore("integer_division")
+	#var hunger_bar_pos = Vector2(-bar_width / 2, -40) # Slightly below thirst bar
+	#draw_rect(Rect2(hunger_bar_pos, Vector2(bar_width, bar_height)), Color.GRAY, false) # Background
+	#draw_rect(Rect2(hunger_bar_pos, Vector2(hunger_fill_width, bar_height)), Color.GREEN) # Fill
+	#
+	## Draw Health Bar (Red)
+	#var health_fill_width = bar_width * (current_health / max_health)
+	#@warning_ignore("integer_division")
+	#var health_bar_pos = Vector2(-bar_width / 2, -30) # Slightly below hunger bar
+	#draw_rect(Rect2(health_bar_pos, Vector2(bar_width, bar_height)), Color.GRAY, false) # Background
+	#draw_rect(Rect2(health_bar_pos, Vector2(health_fill_width, bar_height)), Color.RED) # Fill
+	#
+	#var temp_fill_width = bar_width * ((current_temp + max_temp) / (max_temp - min_temp))
+	#@warning_ignore("integer_division")
+	#var temp_bar_pos = Vector2(-bar_width / 2, -20) # Slightly below hunger bar
+	#draw_rect(Rect2(temp_bar_pos, Vector2(bar_width, bar_height)), Color.GRAY, false) # Background
+	#draw_rect(Rect2(temp_bar_pos, Vector2(temp_fill_width, bar_height)), Color.DARK_ORANGE) # Fill
+#
+#
+	## Draw current state name text
+	## IMPORTANT: You need a default font set in Project Settings > Gui > Theme > Default Font
+	## OR load one in _ready() and assign it.
+	#var state_display_name = current_state_name.replace("State", "").replace("_", " ").capitalize()
+	#@warning_ignore("integer_division")
+	#draw_string(ThemeDB.fallback_font, Vector2(-bar_width / 2, -55), state_display_name,0, -1, 16, Color.WHITE)
+	#
+	## Draw a line to the target tile when seeking resources (visual aid)
+	#if target_tile_coords != Vector2i.ZERO and (current_state_name == "SeekingWaterState" or current_state_name == "SeekingFoodState"):
+		#var target_world_pos: Vector2 = terrain.map_to_local(target_tile_coords) + (terrain.tile_set.tile_size / 2.0)
+		## Convert target world position to a local position relative to the Darwin
+		#draw_line(Vector2.ZERO, to_local(target_world_pos), Color.YELLOW, 2)

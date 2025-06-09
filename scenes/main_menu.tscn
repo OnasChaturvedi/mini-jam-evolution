@@ -1,0 +1,142 @@
+[gd_scene load_steps=8 format=3 uid="uid://d2768suhwk81j"]
+
+[ext_resource type="Script" uid="uid://dpbrj4xvhkdt2" path="res://scripts/main_menu.gd" id="1_8ln24"]
+[ext_resource type="Script" uid="uid://b6ea25cds57ci" path="res://scripts/world.gd" id="1_bqqt6"]
+[ext_resource type="PackedScene" uid="uid://c2lbuipkhgatn" path="res://scenes/bush.tscn" id="2_wu84c"]
+[ext_resource type="FontFile" uid="uid://coe32nc7ugkwu" path="res://resources/homespun.ttf" id="5_8ln24"]
+[ext_resource type="Texture2D" uid="uid://bqkj7hwnx2a7t" path="res://resources/TilesetFinal.png" id="5_rtw2f"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_oa1go"]
+texture = ExtResource("5_rtw2f")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/custom_data_0 = "water"
+0:0/0/custom_data_1 = 0.4
+0:0/0/custom_data_2 = -40.0
+1:0/0 = 0
+1:0/0/custom_data_0 = "tundra"
+1:0/0/custom_data_1 = 0.6
+1:0/0/custom_data_2 = -105.0
+2:0/0 = 0
+2:0/0/custom_data_0 = "taiga"
+2:0/0/custom_data_1 = 0.8
+2:0/0/custom_data_2 = -30.0
+0:1/0 = 0
+0:1/0/custom_data_0 = "grassland"
+0:1/0/custom_data_1 = 1.0
+1:1/0 = 0
+1:1/0/custom_data_0 = "forest"
+1:1/0/custom_data_1 = 0.8
+1:1/0/custom_data_2 = 20.0
+2:1/0 = 0
+2:1/0/custom_data_0 = "desert"
+2:1/0/custom_data_1 = 0.9
+2:1/0/custom_data_2 = 105.0
+0:2/0 = 0
+0:2/0/custom_data_0 = "jungle"
+0:2/0/custom_data_1 = 0.7
+0:2/0/custom_data_2 = 40.0
+1:2/0 = 0
+1:2/0/custom_data_0 = "savanna"
+1:2/0/custom_data_1 = 1.0
+1:2/0/custom_data_2 = 30.0
+2:2/0 = 0
+2:2/0/custom_data_0 = "steppe"
+2:2/0/custom_data_1 = 1.0
+2:2/0/custom_data_2 = 10.0
+0:3/0 = 0
+0:3/0/custom_data_0 = "lava"
+0:3/0/custom_data_1 = 0.3
+0:3/0/custom_data_2 = 250.0
+
+[sub_resource type="TileSet" id="TileSet_tbmy8"]
+tile_size = Vector2i(32, 32)
+custom_data_layer_0/name = "terrain_type"
+custom_data_layer_0/type = 4
+custom_data_layer_1/name = "movement_modifier"
+custom_data_layer_1/type = 3
+custom_data_layer_2/name = "temperature"
+custom_data_layer_2/type = 3
+sources/1 = SubResource("TileSetAtlasSource_oa1go")
+
+[node name="MainMenu" type="Node2D"]
+script = ExtResource("1_8ln24")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Separator" type="Control" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Separator3" type="Control" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 12
+theme_override_constants/shadow_offset_y = 12
+theme_override_constants/outline_size = 24
+theme_override_fonts/font = ExtResource("5_8ln24")
+theme_override_font_sizes/font_size = 128
+text = "EPOCHS OF ERROR"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Separator2" type="Control" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Separator4" type="Control" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Separator5" type="Control" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Separator6" type="Control" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 12
+theme_override_constants/shadow_offset_y = 12
+theme_override_constants/outline_size = 24
+theme_override_fonts/font = ExtResource("5_8ln24")
+theme_override_font_sizes/font_size = 64
+text = "Press any key to start..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="World" type="Node2D" parent="." node_paths=PackedStringArray("tile_map_node")]
+script = ExtResource("1_bqqt6")
+world_width = 150
+world_height = 150
+tile_size = 32
+tile_map_node = NodePath("Terrain")
+bush_scene = ExtResource("2_wu84c")
+
+[node name="Terrain" type="TileMapLayer" parent="World"]
+tile_set = SubResource("TileSet_tbmy8")

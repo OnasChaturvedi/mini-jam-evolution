@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Perk" load_steps=2 format=3 uid="uid://6qj1nlbn0a7l"]
+
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="1_5e44r"]
+
+[resource]
+script = ExtResource("1_5e44r")
+perk_id = "temp_regulation"
+perk_name = "Stable System"
+costs_per_level = Array[int]([25, 40, 55, 85, 125])
+descriptions_per_level = Array[String](["Darwins have little temperature regulation", "Darwins have minor temperature regulation", "Darwins have moderate temperature regulation", "Darwins have significant temperature regulation", "Darwins have strong temperature regulation"])
+bonuses_per_level = Array[float]([1.0, 0.8, 0.6, 0.4, 0.2, 0.05])

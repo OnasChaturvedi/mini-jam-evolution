@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Perk" load_steps=2 format=3 uid="uid://tdhtrujyt77o"]
+
+[ext_resource type="Script" uid="uid://bid2nobr3k8hu" path="res://scripts/PerkResource.gd" id="1_5hgli"]
+
+[resource]
+script = ExtResource("1_5hgli")
+perk_id = "more_health"
+perk_name = "Health Hoarder"
+costs_per_level = Array[int]([20, 30, 45, 70, 100])
+descriptions_per_level = Array[String](["Darwins have 10% more health", "Darwins have 20% more health", "Darwins have 30% more health", "Darwins have 40% more health", "Darwins have 50% more health"])
+bonuses_per_level = Array[float]([1.0, 1.1, 1.2, 1.3, 1.4, 1.5])

@@ -1,39 +1,31 @@
-[gd_scene load_steps=10 format=3 uid="uid://cfva7i8vpovtj"]
+[gd_scene load_steps=11 format=3 uid="uid://cfva7i8vpovtj"]
 
 [ext_resource type="Script" uid="uid://co1bjbscw8uaf" path="res://scripts/creature.gd" id="1_upmfi"]
-[ext_resource type="Texture2D" uid="uid://cyvf463ecshlf" path="res://assets/darwin.png" id="2_bvms0"]
+[ext_resource type="Texture2D" uid="uid://0bsrabumuvml" path="res://assets/peakdarwin.png" id="2_rl551"]
+[ext_resource type="Script" uid="uid://1ybgtn0gwo2g" path="res://addons/health_bar_2d/health_bar_2d.gd" id="3_7obff"]
+[ext_resource type="Texture2D" uid="uid://cnjw8wn77f05i" path="res://addons/health_bar_2d/resources/health_bar_texture.png" id="3_rl551"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_u1m71"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_7obff"]
-atlas = ExtResource("2_bvms0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_2b8l4"]
+atlas = ExtResource("2_rl551")
 region = Rect2(0, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_rl551"]
-atlas = ExtResource("2_bvms0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ge22"]
+atlas = ExtResource("2_rl551")
 region = Rect2(32, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_2b8l4"]
-atlas = ExtResource("2_bvms0")
-region = Rect2(64, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3ge22"]
-atlas = ExtResource("2_bvms0")
-region = Rect2(96, 0, 32, 32)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_3c2ov"]
-atlas = ExtResource("2_bvms0")
-region = Rect2(128, 0, 32, 32)
+atlas = ExtResource("2_rl551")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ygqry"]
+atlas = ExtResource("2_rl551")
+region = Rect2(32, 32, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ygqry"]
 animations = [{
 "frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7obff")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rl551")
-}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2b8l4")
 }, {
@@ -42,24 +34,19 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_3c2ov")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ygqry")
 }],
 "loop": true,
-"name": &"default",
-"speed": 5.0
+"name": &"darwining",
+"speed": 2.0
 }]
 
 [node name="Creature" type="CharacterBody2D" groups=["creatures"]]
+scale = Vector2(1.4, 1.4)
 collision_mask = 2
 script = ExtResource("1_upmfi")
-speed = 150.0
-thirst_depletion_rate = 3.0
-hunger_depletion_rate = 5.0
-satiation_rate = 20.0
-reproduction_thirst_cost = 20.0
-reproduction_hunger_cost = 20.0
-reproduction_threshold_thirst = 70.0
-reproduction_threshold_hunger = 70.0
-max_age = 25.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_u1m71")
@@ -68,7 +55,71 @@ shape = SubResource("CircleShape2D_u1m71")
 position = Vector2(0, -2)
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_ygqry")
-autoplay = "default"
-frame = 1
-frame_progress = 0.041318
+animation = &"darwining"
+autoplay = "darwining"
+frame_progress = 0.236207
 speed_scale = 2.0
+
+[node name="StatusBars" type="Node2D" parent="."]
+position = Vector2(0, 43)
+scale = Vector2(4, 4)
+
+[node name="TemperatureBar" type="TextureProgressBar" parent="StatusBars"]
+offset_left = -6.0
+offset_top = -17.0
+offset_right = 6.0
+offset_bottom = -16.0
+value = 90.0
+texture_under = ExtResource("3_rl551")
+texture_progress = ExtResource("3_rl551")
+tint_under = Color(0.105882, 0.105882, 0.105882, 0.858824)
+tint_progress = Color(0.878431, 0.580392, 0.847059, 1)
+script = ExtResource("3_7obff")
+_static = true
+_animation_timeout = 0.5
+_offset = Vector2(0, -16)
+
+[node name="ThirstBar" type="TextureProgressBar" parent="StatusBars"]
+offset_left = -6.0
+offset_top = -19.0
+offset_right = 6.0
+offset_bottom = -18.0
+value = 90.0
+texture_under = ExtResource("3_rl551")
+texture_progress = ExtResource("3_rl551")
+tint_under = Color(0.105882, 0.105882, 0.105882, 0.858824)
+tint_progress = Color(0.207825, 0.590445, 0.677291, 1)
+script = ExtResource("3_7obff")
+_static = true
+_animation_timeout = 0.5
+_offset = Vector2(0, -16)
+
+[node name="HungerBar" type="TextureProgressBar" parent="StatusBars"]
+offset_left = -6.0
+offset_top = -21.0
+offset_right = 6.0
+offset_bottom = -20.0
+value = 90.0
+texture_under = ExtResource("3_rl551")
+texture_progress = ExtResource("3_rl551")
+tint_under = Color(0.105882, 0.105882, 0.105882, 0.858824)
+tint_progress = Color(1, 0.666667, 0.133333, 1)
+script = ExtResource("3_7obff")
+_static = true
+_animation_timeout = 0.5
+_offset = Vector2(0, -16)
+
+[node name="HealthBar" type="TextureProgressBar" parent="StatusBars"]
+offset_left = -6.0
+offset_top = -23.0
+offset_right = 6.0
+offset_bottom = -22.0
+value = 90.0
+texture_under = ExtResource("3_rl551")
+texture_progress = ExtResource("3_rl551")
+tint_under = Color(0.105882, 0.105882, 0.105882, 0.858824)
+tint_progress = Color(1, 0, 0, 1)
+script = ExtResource("3_7obff")
+_static = true
+_animation_timeout = 0.5
+_offset = Vector2(0, -16)
